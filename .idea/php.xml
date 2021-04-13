@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/jossmp/sunatphp" />
+      <path value="$PROJECT_DIR$/vendor/greenter/core" />
+      <path value="$PROJECT_DIR$/vendor/greenter/htmltopdf" />
+      <path value="$PROJECT_DIR$/vendor/mikehaertl/php-shellcommand" />
+      <path value="$PROJECT_DIR$/vendor/greenter/data" />
+      <path value="$PROJECT_DIR$/vendor/mikehaertl/php-tmpfile" />
+      <path value="$PROJECT_DIR$/vendor/greenter/greenter" />
+      <path value="$PROJECT_DIR$/vendor/mikehaertl/phpwkhtmltopdf" />
+      <path value="$PROJECT_DIR$/vendor/greenter/xml" />
+      <path value="$PROJECT_DIR$/vendor/greenter/report" />
+      <path value="$PROJECT_DIR$/vendor/greenter/xmldsig" />
+      <path value="$PROJECT_DIR$/vendor/greenter/ws" />
+      <path value="$PROJECT_DIR$/vendor/bacon/bacon-qr-code" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+    </include_path>
+  </component>
+</project>

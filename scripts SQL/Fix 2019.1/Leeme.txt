@@ -1,0 +1,7 @@
+Fixes:
+----
+
+[+] Add table comunicacion de baja sunat
+[+] Add column id comunicacion baja - venta
+[+] Add column fecha de emision comprobante
+[+] Insert Rol SuperAdmin

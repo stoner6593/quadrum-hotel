@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/bacon/bacon-qr-code" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/greenter/core" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/greenter/data" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/greenter/greenter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/greenter/htmltopdf" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/greenter/report" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/greenter/ws" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/greenter/xml" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/greenter/xmldsig" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jossmp/sunatphp" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mikehaertl/php-shellcommand" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mikehaertl/php-tmpfile" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mikehaertl/phpwkhtmltopdf" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/twig/twig" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
