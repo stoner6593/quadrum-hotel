@@ -1,24 +1,26 @@
 <?php
 require_once "../../init.php";
+require_once "../../src/Util.php";
 
 include "generales/convertir.php";
 include "../config.php";
 include "../include/functions.php";
 include "Pdf.php";
 
+use Greenter\Model\Client\Client;
+use Greenter\Model\Company\Company;
+use Greenter\Model\Company\Address;
+use Greenter\Model\Sale\FormaPagos\FormaPagoContado;
 use Greenter\Model\Sale\Invoice;
 use Greenter\Model\Sale\SaleDetail;
 use Greenter\Model\Sale\Legend;
-use Greenter\Ws\Services\SunatEndpoints;
-use Greenter\Model\Client\Client;
-use Greenter\Model\Company\Address;
-use Greenter\Model\Company\Company;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
+
 $util = Util::getInstance();
 
-$dato=new Generaxml($_POST['idalquiler'],$_POST['tipo_documento'],$_POST['finicio'],$_POST['ffin']);
+$dato=new Generaxml($_POST['idalquiler'],$_POST['tipo_documento'],@$_POST['finicio'],@$_POST['ffin']);
 
 if($_POST['idalquiler']==0 && $_POST['tipo_documento']==0){
 
@@ -489,9 +491,10 @@ class Generaxml
 
         /** Si solo desea enviar un XML ya generado utilice esta función**/
         //$res = $see->sendXml(get_class($invoice), $invoice->getName(), file_get_contents($ruta_XML));
-
+       
         $res = $see->send($invoice);
-
+       
+/*
         //guardar archivo sin firmar
         $this->util->writeXmlSinFirmar($corre, $see->getFactory()->getBuilder()->build($invoice));
 
@@ -499,7 +502,7 @@ class Generaxml
         $this->util->writeXml($invoice, $see->getFactory()->getLastXml());
 
         if ($res->isSuccess()) {
-            /**@var $res \Greenter\Model\Response\BillResult*/
+          
             $cdr = $res->getCdrResponse();
             $this->util->writeCdr($invoice, $res->getCdrZip());
 
@@ -521,7 +524,7 @@ class Generaxml
             //$error= var_dump($res->getError());
             $ArrayMessage=array('success'=>0,'errors'=>array('getMessage' =>'CodeError: '.$res->getError()->getCode().'.Mensaje: '.$res->getError()->getMessage() ,'getCode'=>0));
             echo json_encode($ArrayMessage);
-        }
+        }*/
 
     }
 

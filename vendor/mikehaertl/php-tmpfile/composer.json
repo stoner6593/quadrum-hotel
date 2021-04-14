@@ -9,9 +9,18 @@
             "email": "haertl.mike@gmail.com"
         }
     ],
+    "require-dev": {
+        "php": ">=5.3.0",
+        "phpunit/phpunit": ">4.0 <=9.4"
+    },
     "autoload": {
         "psr-4": {
             "mikehaertl\\tmp\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests"
         }
     }
 }

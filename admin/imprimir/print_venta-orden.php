@@ -11,10 +11,10 @@ $direccionFiscalDistrito = $configs->getConfig("DIRECCION_FISCAL_DISTRITO");
 $direccionFiscalProvincia = $configs->getConfig("DIRECCION_FISCAL_PROVINCIA");
 $telefonos = $configs->getConfig("TELEFONO");
 
-$xidventa = $_GET['xidventa'];
-$xguardado = $_GET['guardado'];
+$xidventa = @$_GET['xidventa'];
+$xguardado = @$_GET['guardado'];
 
-$detalle = $_GET['detalle'];
+$detalle = @$_GET['detalle'];
 
 //Recuperar Datos para Mostrar
 $sqlventa = $mysqli->query("select

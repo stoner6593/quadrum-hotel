@@ -8,6 +8,10 @@ class ComposerStaticInita0eca0c10d81aef83163c64588d47353
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -20,16 +24,37 @@ class ComposerStaticInita0eca0c10d81aef83163c64588d47353
         'T' => 
         array (
             'Twig\\' => 5,
+            'Tests\\Greenter\\' => 15,
+            'Tests\\' => 6,
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Php80\\' => 23,
+            'Symfony\\Polyfill\\Php73\\' => 23,
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Symfony\\Contracts\\Translation\\' => 30,
+            'Symfony\\Component\\Validator\\' => 28,
+            'Symfony\\Component\\Finder\\' => 25,
             'Sunat\\' => 6,
+        ),
+        'P' => 
+        array (
+            'Psr\\Http\\Message\\' => 17,
+            'PhpZip\\' => 7,
         ),
         'G' => 
         array (
             'Greenter\\XMLSecLibs\\' => 20,
             'Greenter\\' => 9,
+        ),
+        'D' => 
+        array (
+            'DASPRiD\\Enum\\' => 13,
+        ),
+        'B' => 
+        array (
+            'BaconQrCode\\' => 12,
         ),
     );
 
@@ -50,13 +75,61 @@ class ComposerStaticInita0eca0c10d81aef83163c64588d47353
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
         ),
+        'Tests\\Greenter\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/packages/cpe-validator/tests',
+            1 => __DIR__ . '/../..' . '/packages/htmltopdf/tests',
+            2 => __DIR__ . '/../..' . '/packages/report/tests',
+            3 => __DIR__ . '/../..' . '/packages/validator/tests',
+            4 => __DIR__ . '/../..' . '/packages/ws/tests',
+            5 => __DIR__ . '/../..' . '/packages/xcodes/tests',
+            6 => __DIR__ . '/../..' . '/packages/xml-parser/tests',
+            7 => __DIR__ . '/../..' . '/packages/xml/tests',
+        ),
+        'Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/packages/lite/tests',
+            1 => __DIR__ . '/../..' . '/tests',
+        ),
+        'Symfony\\Polyfill\\Php80\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
+        ),
+        'Symfony\\Polyfill\\Php73\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php73',
+        ),
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
+        'Symfony\\Contracts\\Translation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/translation-contracts',
+        ),
+        'Symfony\\Component\\Validator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/validator',
+        ),
+        'Symfony\\Component\\Finder\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/finder',
+        ),
         'Sunat\\' => 
         array (
             0 => __DIR__ . '/..' . '/jossmp/sunatphp/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'PhpZip\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nelexa/zip/src',
         ),
         'Greenter\\XMLSecLibs\\' => 
         array (
@@ -64,35 +137,45 @@ class ComposerStaticInita0eca0c10d81aef83163c64588d47353
         ),
         'Greenter\\' => 
         array (
-            0 => __DIR__ . '/..' . '/greenter/core/src/Core',
-            1 => __DIR__ . '/..' . '/greenter/data/src',
-            2 => __DIR__ . '/..' . '/greenter/greenter/src/Greenter',
-            3 => __DIR__ . '/..' . '/greenter/htmltopdf/src',
-            4 => __DIR__ . '/..' . '/greenter/report/src',
-            5 => __DIR__ . '/..' . '/greenter/ws/src',
-            6 => __DIR__ . '/..' . '/greenter/xml/src',
+            0 => __DIR__ . '/../..' . '/packages/core/src/Core',
+            1 => __DIR__ . '/../..' . '/packages/cpe-validator/src',
+            2 => __DIR__ . '/../..' . '/packages/data/src',
+            3 => __DIR__ . '/../..' . '/packages/htmltopdf/src',
+            4 => __DIR__ . '/../..' . '/packages/lite/src/Greenter',
+            5 => __DIR__ . '/../..' . '/packages/report/src',
+            6 => __DIR__ . '/../..' . '/packages/validator/src',
+            7 => __DIR__ . '/../..' . '/packages/ws/src',
+            8 => __DIR__ . '/../..' . '/packages/xcodes/src',
+            9 => __DIR__ . '/../..' . '/packages/xml-parser/src',
+            10 => __DIR__ . '/../..' . '/packages/xml/src',
+            11 => __DIR__ . '/..' . '/greenter/greenter/packages/core/src/Core',
+            12 => __DIR__ . '/..' . '/greenter/greenter/packages/cpe-validator/src',
+            13 => __DIR__ . '/..' . '/greenter/greenter/packages/data/src',
+            14 => __DIR__ . '/..' . '/greenter/greenter/packages/htmltopdf/src',
+            15 => __DIR__ . '/..' . '/greenter/greenter/packages/lite/src/Greenter',
+            16 => __DIR__ . '/..' . '/greenter/greenter/packages/report/src',
+            17 => __DIR__ . '/..' . '/greenter/greenter/packages/validator/src',
+            18 => __DIR__ . '/..' . '/greenter/greenter/packages/ws/src',
+            19 => __DIR__ . '/..' . '/greenter/greenter/packages/xcodes/src',
+            20 => __DIR__ . '/..' . '/greenter/greenter/packages/xml-parser/src',
+            21 => __DIR__ . '/..' . '/greenter/greenter/packages/xml/src',
+        ),
+        'DASPRiD\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dasprid/enum/src',
+        ),
+        'BaconQrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
     );
 
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/../..' . '/src',
-    );
-
-    public static $prefixesPsr0 = array (
-        'T' => 
-        array (
-            'Twig_' => 
-            array (
-                0 => __DIR__ . '/..' . '/twig/twig/lib',
-            ),
-        ),
-        'B' => 
-        array (
-            'BaconQrCode' => 
-            array (
-                0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
-            ),
-        ),
+    public static $classMap = array (
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -100,8 +183,7 @@ class ComposerStaticInita0eca0c10d81aef83163c64588d47353
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInita0eca0c10d81aef83163c64588d47353::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInita0eca0c10d81aef83163c64588d47353::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInita0eca0c10d81aef83163c64588d47353::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita0eca0c10d81aef83163c64588d47353::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInita0eca0c10d81aef83163c64588d47353::$classMap;
 
         }, null, ClassLoader::class);
     }

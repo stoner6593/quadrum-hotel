@@ -1,6 +1,6 @@
 <?php
 
-use Greenter\Data\StoreTrait;
+//use Greenter\Data\StoreTrait;
 use Greenter\Model\DocumentInterface;
 use Greenter\Model\Response\CdrResponse;
 use Greenter\Report\HtmlReport;
@@ -9,7 +9,7 @@ use Greenter\See;
 
 final class Util
 {
-    use StoreTrait;
+    //use StoreTrait;
 
     private static $current;
 

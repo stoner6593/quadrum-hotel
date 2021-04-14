@@ -9,16 +9,15 @@
     "security",
     "sunat"
   ],
-  "homepage": "https://github.com/giansalex/xmldsig",
+  "homepage": "https://github.com/thegreenter/xmldsig",
   "autoload": {
     "psr-4": {
       "Greenter\\XMLSecLibs\\": "src"
     }
   },
   "require": {
-    "php": ">=5.5.9"
-   },
-  "suggest": {
-    "ext-openssl": "The OpenSsl Extension"
+    "php": ">=5.5.9",
+    "ext-dom": "*",
+    "ext-openssl": "*"
   }
 }

@@ -1238,6 +1238,7 @@ if($configs->getConfigRol("ANULAR_HABITACION", $_SESSION['xyztipo']) == 1){
                   }else{
                       $url = "FE/Generaxml.php";
                   }
+				  console.log($url)
 
 			  	//Enviar proceso por ajax
 			  	$.ajax({

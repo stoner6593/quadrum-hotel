@@ -79,6 +79,7 @@ function turnoNombre($xturno){
 
 function habitacionIcono($xtipo){
 	$xval = intval($xtipo);
+	$xicono='';
 	if($xval==1){
 		$xicono = "<i class='fa fa-hotel'></i>";
 	}elseif($xval==2){
@@ -122,13 +123,15 @@ function estado($xdato){ //Activo / Desativo
 
 function Cfecha($fec)
 {
-$cua = substr($fec,0,4);
-//print_r($fec);
-//if(ereg("/",$cua)){$fecha=substr($fec,6,4)."-".substr($fec,3,2)."-".substr($fec,0,2);}
-//else{
-	//$fecha=substr($fec,8,2)."/".substr($fec,5,2)."/".substr($fec,0,4);
-//}
-return $fec;
+	$cua = substr($fec,0,4);
+	
+	if(preg_match ("//",$cua)){
+		$fecha=substr($fec,8,2)."-".substr($fec,5,2)."-".substr($fec,0,4);
+	}else{
+		$fecha=substr($fec,8,2)."/".substr($fec,5,2)."/".substr($fec,0,4);
+	}
+
+	return $fecha;
 }
 
 function formaPago($forma)

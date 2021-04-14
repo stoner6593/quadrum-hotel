@@ -6,14 +6,18 @@ include "../functions.php";
 //--------------------------------------------------------------
 $concatena='';
 
-$finicio=($_POST['finicio']);
-$ffin=($_POST['ffin']);
-
+$finicio=@($_POST['finicio']);
+$ffin=@($_POST['ffin']);
+$newfecha1='';
+$newfecha2='';
+if($finicio){ 
 $f1=explode("/",$finicio);
 $newfecha1=$f1[2].'-'.$f1[1].'-'.$f1[0];
-
+}
+if($ffin){
 $f2=explode("/",$ffin);
 $newfecha2=$f2[2].'-'.$f2[1].'-'.$f2[0];
+}
 
 
 

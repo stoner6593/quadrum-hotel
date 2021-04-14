@@ -9,7 +9,7 @@ date_default_timezone_set('America/Lima');
 $xidhabitacion = $_GET['idhabitacion'];
 $xnrohabitacion = $_GET['nrohabitacion'];
 $xestadohabitacion = @$_GET['xestado'];
-
+	$xprecioalquiler =0;
 $idtipohab = $_GET['idtipohab'];
 /*
 $sqlhuesped = $mysqli->query("select
@@ -1195,7 +1195,7 @@ $sqlalquilertmp = $mysqli->query("select
                                 <td height="25" align="center" class="textoContenido"><?php echo $num;?></td>
                                 <td height="25">
 								  <span class="textoContenido">
-								  <?php 							$xprecioalquiler =0;
+								  <?php 						
 								$xprecioalquiler = $xprecioalquiler + $tmpFila['18'];
                 $ingresoEfectivo=0;
 								if($tmpFila['20'] == 0 || $tmpFila['20'] == 1 || $tmpFila['20'] == 2 || $tmpFila['20'] == 3 || $tmpFila['20'] == 4){

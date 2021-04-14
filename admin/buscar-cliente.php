@@ -129,7 +129,7 @@ body {
           <td height="25" bgcolor="#FFFFFF" class="textoContenidoNegro" align="center"><?php if($Fila['3']==1){echo "<img src='imagenesv/desactivo.gif'/>";} ?></td>
           <td height="25" bgcolor="#FFFFFF" class="textoContenidoNegro"><div align="center">
             
-            <a href="#" onclick='entregar(<? echo $Fila['0'];?> , "<?php echo $Fila['1']; ?>")' class="btnestado"> <i class="fa fa-check"></i> </a>
+            <a href="#" onclick='entregar(<?php echo $Fila['0'];?> , "<?php echo $Fila['1']; ?>")' class="btnestado"> <i class="fa fa-check"></i> </a>
             
           </div></td>
         </tr>	
