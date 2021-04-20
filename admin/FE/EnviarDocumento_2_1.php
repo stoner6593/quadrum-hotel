@@ -17,22 +17,18 @@ use Greenter\Model\Sale\Legend;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-
 $util = Util::getInstance();
 
-
-$dato=new Generaxml($_POST['idalquiler'],$_POST['tipo_documento'],@$_POST['finicio'],@$_POST['ffin']);
+$dato=new Generaxml($_POST['idalquiler'],$_POST['tipo_documento'],$_POST['finicio'],$_POST['ffin']);
 
 if($_POST['idalquiler']==0 && $_POST['tipo_documento']==0){
-    echo $_POST['idalquiler'].'-'.$_POST['tipo_documento'].'-123';
+
     $dato->_xmlResumen();
 }else{
     if($_POST['tipo_servicio']=='AL') {
-        echo $_POST['idalquiler'].'-'.$_POST['tipo_documento'].'-456';
         $dato->generar_xml();
     }
     if($_POST['tipo_servicio']=='VE') {
-        echo $_POST['idalquiler'].'-'.$_POST['tipo_documento'].'-789';
         $dato->generar_xml_venta();
     }
 }
@@ -62,7 +58,6 @@ class Generaxml
 
     function __construct($idalquiler, $tipo_documento, $finicio = null, $ffin)
     {
-    
         $this->idalquiler = $idalquiler;
         $this->tipo_documento = $tipo_documento;
         $this->finicio = $finicio;
@@ -122,7 +117,7 @@ class Generaxml
 
     public function generar_xml()
     {
-      
+
         $db = new conexion();
         $link = $db->conexion();
 
@@ -495,10 +490,9 @@ class Generaxml
 
         /** Si solo desea enviar un XML ya generado utilice esta función**/
         //$res = $see->sendXml(get_class($invoice), $invoice->getName(), file_get_contents($ruta_XML));
-       
+
         $res = $see->send($invoice);
-       
-/*
+
         //guardar archivo sin firmar
         $this->util->writeXmlSinFirmar($corre, $see->getFactory()->getBuilder()->build($invoice));
 
@@ -506,7 +500,7 @@ class Generaxml
         $this->util->writeXml($invoice, $see->getFactory()->getLastXml());
 
         if ($res->isSuccess()) {
-          
+            /**@var $res \Greenter\Model\Response\BillResult*/
             $cdr = $res->getCdrResponse();
             $this->util->writeCdr($invoice, $res->getCdrZip());
 
@@ -528,7 +522,7 @@ class Generaxml
             //$error= var_dump($res->getError());
             $ArrayMessage=array('success'=>0,'errors'=>array('getMessage' =>'CodeError: '.$res->getError()->getCode().'.Mensaje: '.$res->getError()->getMessage() ,'getCode'=>0));
             echo json_encode($ArrayMessage);
-        }*/
+        }
 
     }
 

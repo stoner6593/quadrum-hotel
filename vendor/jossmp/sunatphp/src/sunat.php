@@ -52,38 +52,6 @@
 				{
 					$rtn["Telefono"] = trim($matches[0][1]);
 				}
-				
-				//Actividades Economicas
-				$actividades_economicas = array();
-				$patron='/<td class=\"bgn\" colspan=1>Actividad\(es\) Econ(.+)mica\(s\):<\/td>\r\n[\t]*[ ]+<td class="bg" colspan=[1|3]+>(([\r|\n|\t]*[ ]*)*)*(.*)((([\r|\n|\t]*[ ]*)*<!--(.*)-->([\r|\n|\t]*[ ]*)*)*)(.*)((([\r|\n|\t]*[ ]*)*<!--(.*)-->([\r|\n|\t]*[ ]*)*)*)(.*)/';
-				$match ="";
-				$splitMatch ="";
-				$splitMatchCode ="";
-				$output = preg_match_all($patron, utf8_encode($Page) , $matches, PREG_SET_ORDER);
-				
-				if( isset($matches[0]) )
-				{
-					//$rtn["ActividadesEconomicas"] = trim($matches[0][0]);
-					$match = $matches[0][0];
-					$match =preg_replace('/Actividad\(es\) Econ(.+)mica\(s\):/', '', $match );	
-					$match =preg_replace('/<!--(.|\s)*?-->/', '', trim($match) );
-					
-					$splitMatch = explode("<br>", trim($match));					
-										
-					foreach ($splitMatch as $valor) {
-					    $splitMatchCode = explode("-", trim(strip_tags($valor)));
-					    //foreach ($splitMatchCode as $valorSgte) {
-					    	if(trim($splitMatchCode[0])!=""){
-						    	$actividades_economicas []=array(
-								"tipoActividad" 				=> trim($splitMatchCode[0]),
-								"codigoActividad" 				=> trim($splitMatchCode[1]),
-								"descActividad" 				=> trim($splitMatchCode[2])
-							);
-						}
-					}					
-				}
-				$rtn["ActividadesEconomicas"] = $actividades_economicas;
-				
 
 				// Condicion Contribuyente
 				$patron='/<td class="bgn"[ ]*colspan=1[ ]*>Condici&oacute;n del Contribuyente:[ ]*<\/td>\r\n[\t]*[ ]+<td class="bg" colspan=[1|3]+>[\r\n\t[ ]+]*(.*)[\r\n\t[ ]+]*<\/td>/';
@@ -103,7 +71,7 @@
 					"ActividadExterior"		=> "Actividad de Comercio Exterior",
 					"SistemaContabilidad" 	=> "Sistema de Contabilidad",
 					"Oficio" 				=> "Profesi&oacute;n u Oficio",
-					//"ActividadEconomica" 	=> "Actividad\(es\) Econ&oacute;mica\(s\)",
+					"ActividadEconomica" 	=> "Actividad\(es\) Econ&oacute;mica\(s\)",
 					"EmisionElectronica" 	=> "Emisor electr&oacute;nico desde",
 					"PLE" 					=> "Afiliado al PLE desde"
 				);
@@ -124,16 +92,13 @@
 				{
 					$legal = $this->RepresentanteLegal( $ruc );
 				}
-				$rtn["representantes_legales"] = $legal;
-				
 				$trabs = array();
 				if($this->_trabs)
 				{
 					$trabs = $this->numTrabajadores( $ruc );
 				}
-				$rtn["cantidad_trabajadores"] = $trabs;
 				
-				return $rtn;
+				return $rtn + array( "representantes_legales"=>$legal,"cantidad_trabajadores"=>$trabs );
 			}
 			return false;
 		}
@@ -152,7 +117,6 @@
 				$output = preg_match_all($patron, $rtn, $matches, PREG_SET_ORDER);
 				if( count($matches) > 0 )
 				{
-					$cantidad_trabajadores = array();
 					//foreach( array_reverse($matches) as $obj )
 					foreach( $matches as $obj )
 					{
@@ -185,14 +149,13 @@
 				$output = preg_match_all($patron, $rtn, $matches, PREG_SET_ORDER);
 				if( count($matches) > 0 )
 				{
-					$representantes_legales = array();
 					foreach( $matches as $obj )
 					{
 						$representantes_legales[]=array(
 							"tipodoc" 				=> trim($obj[1]),
 							"numdoc" 				=> trim($obj[2]),
-							"nombre" 				=> utf8_encode(trim($obj[3])),
-							"cargo" 				=> utf8_encode(trim($obj[4])),
+							"nombre" 				=> trim($obj[3]),
+							"cargo" 				=> trim($obj[4]),
 							"desde" 				=> trim($obj[5]),
 						);
 					}
@@ -291,100 +254,13 @@
 						"msg" 		=> "No se ha encontrado resultados."
 					);
 				}
-				return ($inJSON==true)?json_encode($rtn, JSON_PRETTY_PRINT):$rtn;
+				return ($inJSON==true)?json_encode($rtn,JSON_PRETTY_PRINT):$rtn;
 			}
 
 			$rtn = array(
 				"success" 	=> false,
 				"msg" 		=> "Nro de RUC o DNI no valido."
 			);
-			return ($inJSON==true)?json_encode($rtn, JSON_PRETTY_PRINT):$rtn;
-		}
-		
-		function search2( $ruc_dni, $inJSON = false )
-		{
-			if( strlen(trim($ruc_dni))==8 )
-			{
-				$ruc_dni = $this->dnitoruc($ruc_dni);
-			}
-			if( strlen($ruc_dni)==11 && $this->valid($ruc_dni) )
-			{
-				$info = $this->getDataRUC($ruc_dni);
-				if( $info!=false )
-				{
-					$rtn = array(
-						"success" 	=> true,
-						"result" 	=> $info
-					);
-				}
-				else
-				{
-					$rtn = array(
-						"success" 	=> false,
-						"msg" 		=> "No se ha encontrado resultados."
-					);
-				}
-				return ($inJSON==true)?json_encode($info , JSON_PRETTY_PRINT):$info ;
-			}
-
-			$rtn = array(
-				"success" 	=> false,
-				"msg" 		=> "Nro de RUC o DNI no valido."
-			);
-			return ($inJSON==true)?json_encode($info , JSON_PRETTY_PRINT):$info ;
-		}
-		
-		function getHtmlRUC( $ruc )
-		{
-			$numRand = $this->getNumRand();
-			$rtn = array();
-			if($ruc != "" && $numRand!=false)
-			{
-				$data = array(
-					"nroRuc" => $ruc,
-					"accion" => "consPorRuc",
-					"numRnd" => $numRand
-				);
-
-				$url = "http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias";
-				$Page = $this->cc->send( $url, $data );				
-				
-				$actividades_economicas = array();
-				//Actividades Economicas
-				//$patron='/<td class=\"bgn\" colspan=1>Actividad\(es\) Econ(.+)mica\(s\):<\/td>\r\n[\t]*[ ]+<td class="bg" colspan=[1|3]+>(([\r|\n|\t]*[ ]*)*)*(.*)((([\r|\n|\t]*[ ]*)*<!--(.*)-->([\r|\n|\t]*[ ]*)*)*)(.*)((([\r|\n|\t]*[ ]*)*<!--(.*)-->([\r|\n|\t]*[ ]*)*)*)(.*)((([\r|\n|\t]*[ ]*)*<!--(.*)-->([\r|\n|\t]*[ ]*)*)*)(.*)((([\r|\n|\t]*[ ]*)*<!--(.*)-->([\r|\n|\t]*[ ]*)*)*)/';
-				$patron='/<td class=\"bgn\" colspan=1>Actividad\(es\) Econ(.+)mica\(s\):<\/td>\r\n[\t]*[ ]+<td class="bg" colspan=[1|3]+>(([\r|\n|\t]*[ ]*)*)*(.*)((([\r|\n|\t]*[ ]*)*<!--(.*)-->([\r|\n|\t]*[ ]*)*)*)(.*)((([\r|\n|\t]*[ ]*)*<!--(.*)-->([\r|\n|\t]*[ ]*)*)*)(.*)/';
-				$match ="";
-				$splitMatch ="";
-				$splitMatchCode ="";
-				$output = preg_match_all($patron, utf8_encode($Page) , $matches, PREG_SET_ORDER);
-				
-				if( isset($matches[0]) )
-				{
-					//$rtn["ActividadesEconomicas"] = trim($matches[0][0]);
-					$match = $matches[0][0];
-					$match =preg_replace('/Actividad\(es\) Econ(.+)mica\(s\):/', '', $match );	
-					$match =preg_replace('/<!--(.|\s)*?-->/', '', trim($match) );
-					
-					$splitMatch = explode("<br>", trim($match));					
-										
-					foreach ($splitMatch as $valor) {
-					    $splitMatchCode = explode("-", trim(strip_tags($valor)));
-					    //foreach ($splitMatchCode as $valorSgte) {
-					    	if(trim($splitMatchCode[0])!=""){
-						    	$actividades_economicas []=array(
-								"tipoActividad" 				=> trim($splitMatchCode[0]),
-								"codigoActividad" 				=> trim($splitMatchCode[1]),
-								"descActividad" 				=> trim($splitMatchCode[2])
-							);
-						}
-					}
-					
-				}
-								
-				return json_encode($actividades_economicas, JSON_UNESCAPED_UNICODE);
-				//return $matches[0][0];
-			}
-			
-			return "error";
+			return ($inJSON==true)?json_encode($rtn,JSON_PRETTY_PRINT):$rtn;
 		}
 	}
