@@ -1469,7 +1469,7 @@ require_once "../../init.php";
 			$y=$pdf->GetY();		
 			$pdf->MultiCell(70,8,"Gracias... vuelva pronto!!!",0,'C',FALSE,1,6,$y+5); 
 		
-	        $pdf->Output('PDF/'.$nombre_archivo.'.pdf', 'F');
+	        $pdf->Output(__DIR__ .'/PDF/'.$nombre_archivo.'.pdf', 'F');
 
 		}
 	 
@@ -1480,10 +1480,11 @@ require_once "../../init.php";
 	$dato=new Generaxml($_POST['idalquiler'],$_POST['tipo_documento'],@$_POST['finicio'],@$_POST['ffin']);
 	
 	if($_POST['idalquiler']==0 && $_POST['tipo_documento']==0){
-
+		
 		$dato->_xmlResumen();
 
 	}else{
+	
 		$dato->generar_xml();
 	}
 	

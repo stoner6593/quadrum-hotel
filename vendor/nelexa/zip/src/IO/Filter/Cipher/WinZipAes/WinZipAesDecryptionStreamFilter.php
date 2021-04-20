@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\IO\Filter\Cipher\WinZipAes;
 
 use PhpZip\Exception\RuntimeException;
@@ -21,31 +12,43 @@ use PhpZip\Model\ZipEntry;
  */
 class WinZipAesDecryptionStreamFilter extends \php_user_filter
 {
-    public const FILTER_NAME = 'phpzip.decryption.winzipaes';
+    const FILTER_NAME = 'phpzip.decryption.winzipaes';
 
-    private string $buffer;
+    /** @var string */
+    private $buffer;
 
-    private ?string $authenticationCode = null;
+    /** @var string */
+    private $authenticationCode;
 
-    private int $encBlockPosition = 0;
+    /** @var int */
+    private $encBlockPosition = 0;
 
-    private int $encBlockLength = 0;
+    /** @var int */
+    private $encBlockLength = 0;
 
-    private int $readLength = 0;
+    /** @var int */
+    private $readLength = 0;
 
-    private ZipEntry $entry;
+    /** @var ZipEntry */
+    private $entry;
 
-    private ?WinZipAesContext $context = null;
+    /** @var WinZipAesContext|null */
+    private $context;
 
-    public static function register(): bool
+    /**
+     * @return bool
+     */
+    public static function register()
     {
         return stream_filter_register(self::FILTER_NAME, __CLASS__);
     }
 
     /**
+     * @return bool
+     *
      * @noinspection DuplicatedCode
      */
-    public function onCreate(): bool
+    public function onCreate()
     {
         if (!isset($this->params['entry'])) {
             return false;
@@ -57,9 +60,9 @@ class WinZipAesDecryptionStreamFilter extends \php_user_filter
         $this->entry = $this->params['entry'];
 
         if (
-            $this->entry->getPassword() === null
-            || !$this->entry->isEncrypted()
-            || !$this->entry->hasExtraField(WinZipAesExtraField::HEADER_ID)
+            $this->entry->getPassword() === null ||
+            !$this->entry->isEncrypted() ||
+            !$this->entry->hasExtraField(WinZipAesExtraField::HEADER_ID)
         ) {
             return false;
         }
@@ -70,10 +73,16 @@ class WinZipAesDecryptionStreamFilter extends \php_user_filter
     }
 
     /**
+     * @param resource $in
+     * @param resource $out
+     * @param int      $consumed
+     * @param bool     $closing
+     *
      * @throws ZipAuthenticationException
-     * @noinspection PhpDocSignatureInspection
+     *
+     * @return int
      */
-    public function filter($in, $out, &$consumed, $closing): int
+    public function filter($in, $out, &$consumed, $closing)
     {
         while ($bucket = stream_bucket_make_writeable($in)) {
             $this->buffer .= $bucket->data;
@@ -147,8 +156,8 @@ class WinZipAesDecryptionStreamFilter extends \php_user_filter
             $this->encBlockPosition += $offset;
 
             if (
-                $this->encBlockPosition === $this->encBlockLength
-                && \strlen($this->buffer) === WinZipAesContext::FOOTER_SIZE
+                $this->encBlockPosition === $this->encBlockLength &&
+                \strlen($this->buffer) === WinZipAesContext::FOOTER_SIZE
             ) {
                 $this->authenticationCode = $this->buffer;
                 $this->buffer = '';
@@ -167,11 +176,11 @@ class WinZipAesDecryptionStreamFilter extends \php_user_filter
      *
      * @throws ZipAuthenticationException
      */
-    public function onClose(): void
+    public function onClose()
     {
         $this->buffer = '';
 
-        if ($this->context !== null && $this->authenticationCode !== null) {
+        if ($this->context !== null) {
             $this->context->checkAuthCode($this->authenticationCode);
         }
     }

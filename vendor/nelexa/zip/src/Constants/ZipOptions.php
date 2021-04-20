@@ -1,19 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Constants;
 
 use PhpZip\IO\ZipReader;
 use PhpZip\ZipFile;
 
+/**
+ * Interface ZipOptions.
+ */
 interface ZipOptions
 {
     /**
@@ -21,7 +15,7 @@ interface ZipOptions
      *
      * @see ZipFile::addFromFinder()
      */
-    public const STORE_ONLY_FILES = 'only_files';
+    const STORE_ONLY_FILES = 'only_files';
 
     /**
      * Uses the specified compression method.
@@ -29,7 +23,7 @@ interface ZipOptions
      * @see ZipFile::addFromFinder()
      * @see ZipFile::addSplFile()
      */
-    public const COMPRESSION_METHOD = 'compression_method';
+    const COMPRESSION_METHOD = 'compression_method';
 
     /**
      * Set the specified record modification time.
@@ -39,7 +33,7 @@ interface ZipOptions
      * @see ZipFile::addFromFinder()
      * @see ZipFile::addSplFile()
      */
-    public const MODIFIED_TIME = 'mtime';
+    const MODIFIED_TIME = 'mtime';
 
     /**
      * Specifies the encoding of the record name for cases when the UTF-8
@@ -54,7 +48,7 @@ interface ZipOptions
      * @see ZipReader::getDefaultOptions()
      * @see DosCodePage::getCodePages()
      */
-    public const CHARSET = 'charset';
+    const CHARSET = 'charset';
 
     /**
      * Allows ({@see true}) or denies ({@see false}) unpacking unix symlinks.
@@ -64,5 +58,5 @@ interface ZipOptions
      *
      * @see https://josipfranjkovic.blogspot.com/2014/12/reading-local-files-from-facebooks.html
      */
-    public const EXTRACT_SYMLINKS = 'extract_symlinks';
+    const EXTRACT_SYMLINKS = 'extract_symlinks';
 }

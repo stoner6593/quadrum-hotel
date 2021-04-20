@@ -1,24 +1,24 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Model;
 
-use PhpZip\Exception\ZipEntryNotFoundException;
-
+/**
+ * @author Ne-Lexa alexey@nelexa.ru
+ * @license MIT
+ */
 class ZipEntryMatcher implements \Countable
 {
-    protected ZipContainer $zipContainer;
+    /** @var ZipContainer */
+    protected $zipContainer;
 
-    protected array $matches = [];
+    /** @var array */
+    protected $matches = [];
 
+    /**
+     * ZipEntryMatcher constructor.
+     *
+     * @param ZipContainer $zipContainer
+     */
     public function __construct(ZipContainer $zipContainer)
     {
         $this->zipContainer = $zipContainer;
@@ -29,11 +29,13 @@ class ZipEntryMatcher implements \Countable
      *
      * @return ZipEntryMatcher
      */
-    public function add($entries): self
+    public function add($entries)
     {
         $entries = (array) $entries;
         $entries = array_map(
-            static fn ($entry) => $entry instanceof ZipEntry ? $entry->getName() : (string) $entry,
+            static function ($entry) {
+                return $entry instanceof ZipEntry ? $entry->getName() : (string) $entry;
+            },
             $entries
         );
         $this->matches = array_values(
@@ -57,16 +59,23 @@ class ZipEntryMatcher implements \Countable
     }
 
     /**
+     * @param string $regexp
+     *
      * @return ZipEntryMatcher
+     *
      * @noinspection PhpUnusedParameterInspection
      */
-    public function match(string $regexp): self
+    public function match($regexp)
     {
         array_walk(
             $this->zipContainer->getEntries(),
-            function (ZipEntry $entry, string $entryName) use ($regexp): void {
+            /**
+             * @param ZipEntry $entry
+             * @param string   $entryName
+             */
+            function (ZipEntry $entry, $entryName) use ($regexp) {
                 if (preg_match($regexp, $entryName)) {
-                    $this->matches[] = $entryName;
+                    $this->matches[] = (string) $entryName;
                 }
             }
         );
@@ -78,7 +87,7 @@ class ZipEntryMatcher implements \Countable
     /**
      * @return ZipEntryMatcher
      */
-    public function all(): self
+    public function all()
     {
         $this->matches = array_map(
             'strval',
@@ -93,31 +102,36 @@ class ZipEntryMatcher implements \Countable
      *
      * Callable function signature:
      * function(string $entryName){}
+     *
+     * @param callable $callable
      */
-    public function invoke(callable $callable): void
+    public function invoke(callable $callable)
     {
         if (!empty($this->matches)) {
             array_walk(
                 $this->matches,
                 /** @param string $entryName */
-                static function (string $entryName) use ($callable): void {
+                static function ($entryName) use ($callable) {
                     $callable($entryName);
                 }
             );
         }
     }
 
-    public function getMatches(): array
+    /**
+     * @return array
+     */
+    public function getMatches()
     {
         return $this->matches;
     }
 
-    public function delete(): void
+    public function delete()
     {
         array_walk(
             $this->matches,
             /** @param string $entryName */
-            function (string $entryName): void {
+            function ($entryName) {
                 $this->zipContainer->deleteEntry($entryName);
             }
         );
@@ -125,17 +139,15 @@ class ZipEntryMatcher implements \Countable
     }
 
     /**
-     * @param ?string $password
-     * @param ?int    $encryptionMethod
-     *
-     * @throws ZipEntryNotFoundException
+     * @param string|null $password
+     * @param int|null    $encryptionMethod
      */
-    public function setPassword(?string $password, ?int $encryptionMethod = null): void
+    public function setPassword($password, $encryptionMethod = null)
     {
         array_walk(
             $this->matches,
             /** @param string $entryName */
-            function (string $entryName) use ($password, $encryptionMethod): void {
+            function ($entryName) use ($password, $encryptionMethod) {
                 $entry = $this->zipContainer->getEntry($entryName);
 
                 if (!$entry->isDirectory()) {
@@ -146,14 +158,14 @@ class ZipEntryMatcher implements \Countable
     }
 
     /**
-     * @throws ZipEntryNotFoundException
+     * @param int $encryptionMethod
      */
-    public function setEncryptionMethod(int $encryptionMethod): void
+    public function setEncryptionMethod($encryptionMethod)
     {
         array_walk(
             $this->matches,
             /** @param string $entryName */
-            function (string $entryName) use ($encryptionMethod): void {
+            function ($entryName) use ($encryptionMethod) {
                 $entry = $this->zipContainer->getEntry($entryName);
 
                 if (!$entry->isDirectory()) {
@@ -163,14 +175,12 @@ class ZipEntryMatcher implements \Countable
         );
     }
 
-    /**
-     * @throws ZipEntryNotFoundException
-     */
-    public function disableEncryption(): void
+    public function disableEncryption()
     {
         array_walk(
             $this->matches,
-            function (string $entryName): void {
+            /** @param string $entryName */
+            function ($entryName) {
                 $entry = $this->zipContainer->getEntry($entryName);
 
                 if (!$entry->isDirectory()) {
@@ -186,8 +196,10 @@ class ZipEntryMatcher implements \Countable
      * @see http://php.net/manual/en/countable.count.php
      *
      * @return int the custom count as an integer
+     *
+     * @since 5.1.0
      */
-    public function count(): int
+    public function count()
     {
         return \count($this->matches);
     }

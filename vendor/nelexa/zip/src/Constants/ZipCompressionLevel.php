@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Constants;
 
 /**
@@ -36,28 +27,28 @@ namespace PhpZip\Constants;
 interface ZipCompressionLevel
 {
     /** @var int Compression level for super fast compression. */
-    public const SUPER_FAST = 1;
+    const SUPER_FAST = 1;
 
     /** @var int compression level for fast compression */
-    public const FAST = 2;
+    const FAST = 2;
 
     /** @var int compression level for normal compression */
-    public const NORMAL = 5;
+    const NORMAL = 5;
 
     /** @var int compression level for maximum compression */
-    public const MAXIMUM = 9;
+    const MAXIMUM = 9;
 
     /**
      * @var int int Minimum compression level
      *
      * @internal
      */
-    public const LEVEL_MIN = self::SUPER_FAST;
+    const LEVEL_MIN = self::SUPER_FAST;
 
     /**
      * @var int int Maximum compression level
      *
      * @internal
      */
-    public const LEVEL_MAX = self::MAXIMUM;
+    const LEVEL_MAX = self::MAXIMUM;
 }

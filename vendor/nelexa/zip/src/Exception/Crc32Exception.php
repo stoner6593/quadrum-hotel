@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Exception;
 
 /**
@@ -17,16 +8,34 @@ namespace PhpZip\Exception;
  * and the computed value from the decompressed data.
  *
  * The exception detail message is the name of the ZIP entry.
+ *
+ * @author Ne-Lexa alexey@nelexa.ru
+ * @license MIT
  */
 class Crc32Exception extends ZipException
 {
-    /** Expected crc. */
-    private int $expectedCrc;
+    /**
+     * Expected crc.
+     *
+     * @var int
+     */
+    private $expectedCrc;
 
-    /** Actual crc. */
-    private int $actualCrc;
+    /**
+     * Actual crc.
+     *
+     * @var int
+     */
+    private $actualCrc;
 
-    public function __construct(string $name, int $expected, int $actual)
+    /**
+     * Crc32Exception constructor.
+     *
+     * @param string $name
+     * @param int    $expected
+     * @param int    $actual
+     */
+    public function __construct($name, $expected, $actual)
     {
         parent::__construct(
             sprintf(
@@ -42,16 +51,20 @@ class Crc32Exception extends ZipException
 
     /**
      * Returns expected crc.
+     *
+     * @return int
      */
-    public function getExpectedCrc(): int
+    public function getExpectedCrc()
     {
         return $this->expectedCrc;
     }
 
     /**
      * Returns actual crc.
+     *
+     * @return int
      */
-    public function getActualCrc(): int
+    public function getActualCrc()
     {
         return $this->actualCrc;
     }

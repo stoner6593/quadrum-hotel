@@ -145,7 +145,7 @@ $_SESSION['idturno'] = 0;
     </form>
 </div>
 <div class="txterror">
-	<?php echo $_SESSION['msgerror']; $_SESSION['msgerror']="";?>
+	<?php echo @$_SESSION['msgerror']; @$_SESSION['msgerror']="";?>
 </div>
 
 </body>

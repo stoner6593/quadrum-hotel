@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\IO\Filter\Cipher\WinZipAes;
 
 use PhpZip\Exception\RuntimeException;
@@ -21,35 +12,51 @@ use PhpZip\Util\CryptoUtil;
  * @see https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT APPENDIX E
  * @see https://www.winzip.com/win/en/aes_info.html
  *
+ * @author Ne-Lexa alexey@nelexa.ru
+ * @license MIT
+ *
  * @internal
  */
 class WinZipAesContext
 {
     /** @var int AES Block size */
-    public const BLOCK_SIZE = self::IV_SIZE;
+    const BLOCK_SIZE = self::IV_SIZE;
 
     /** @var int Footer size */
-    public const FOOTER_SIZE = 10;
+    const FOOTER_SIZE = 10;
 
     /** @var int The iteration count for the derived keys of the cipher, KLAC and MAC. */
-    public const ITERATION_COUNT = 1000;
+    const ITERATION_COUNT = 1000;
 
     /** @var int Password verifier size */
-    public const PASSWORD_VERIFIER_SIZE = 2;
+    const PASSWORD_VERIFIER_SIZE = 2;
 
     /** @var int IV size */
-    public const IV_SIZE = 16;
+    const IV_SIZE = 16;
 
-    private string $iv;
+    /** @var string */
+    private $iv;
 
-    private string $key;
+    /** @var string */
+    private $key;
 
-    private \HashContext $hmacContext;
+    /** @var \HashContext|resource */
+    private $hmacContext;
 
-    private string $passwordVerifier;
+    /** @var string */
+    private $passwordVerifier;
 
-    public function __construct(int $encryptionStrengthBits, string $password, string $salt)
+    /**
+     * WinZipAesContext constructor.
+     *
+     * @param int    $encryptionStrengthBits
+     * @param string $password
+     * @param string $salt
+     */
+    public function __construct($encryptionStrengthBits, $password, $salt)
     {
+        $encryptionStrengthBits = (int) $encryptionStrengthBits;
+
         if ($password === '') {
             throw new RuntimeException('$password is empty');
         }
@@ -80,12 +87,15 @@ class WinZipAesContext
         $this->passwordVerifier = substr($hash, 2 * $keyStrengthBytes, self::PASSWORD_VERIFIER_SIZE);
     }
 
-    public function getPasswordVerifier(): string
+    /**
+     * @return string
+     */
+    public function getPasswordVerifier()
     {
         return $this->passwordVerifier;
     }
 
-    public function updateIv(): void
+    public function updateIv()
     {
         for ($ivCharIndex = 0; $ivCharIndex < self::IV_SIZE; $ivCharIndex++) {
             $ivByte = \ord($this->iv[$ivCharIndex]);
@@ -102,14 +112,24 @@ class WinZipAesContext
         }
     }
 
-    public function decryption(string $data): string
+    /**
+     * @param string $data
+     *
+     * @return string
+     */
+    public function decryption($data)
     {
         hash_update($this->hmacContext, $data);
 
         return CryptoUtil::decryptAesCtr($data, $this->key, $this->iv);
     }
 
-    public function encrypt(string $data): string
+    /**
+     * @param string $data
+     *
+     * @return string
+     */
+    public function encrypt($data)
     {
         $encryptionData = CryptoUtil::encryptAesCtr($data, $this->key, $this->iv);
         hash_update($this->hmacContext, $encryptionData);
@@ -118,9 +138,11 @@ class WinZipAesContext
     }
 
     /**
+     * @param string $authCode
+     *
      * @throws ZipAuthenticationException
      */
-    public function checkAuthCode(string $authCode): void
+    public function checkAuthCode($authCode)
     {
         $hmac = $this->getHmac();
 
@@ -130,7 +152,10 @@ class WinZipAesContext
         }
     }
 
-    public function getHmac(): string
+    /**
+     * @return string
+     */
+    public function getHmac()
     {
         return substr(
             hash_final($this->hmacContext, true),

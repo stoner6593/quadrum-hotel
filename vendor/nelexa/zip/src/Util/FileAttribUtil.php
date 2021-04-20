@@ -1,29 +1,28 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Util;
 
 use PhpZip\Constants\DosAttrs;
 use PhpZip\Constants\UnixStat;
 
 /**
+ * Class FileAttribUtil.
+ *
  * @internal
  */
 class FileAttribUtil implements DosAttrs, UnixStat
 {
     /**
-     * Get DOS mode.
+     * Get DOS mode,.
+     *
+     * @param int $xattr
+     *
+     * @return string
      */
-    public static function getDosMode(int $xattr): string
+    public static function getDosMode($xattr)
     {
+        $xattr = (int) $xattr;
+
         $mode = (($xattr & self::DOS_DIRECTORY) === self::DOS_DIRECTORY) ? 'd' : '-';
         $mode .= (($xattr & self::DOS_ARCHIVE) === self::DOS_ARCHIVE) ? 'a' : '-';
         $mode .= (($xattr & self::DOS_READ_ONLY) === self::DOS_READ_ONLY) ? 'r' : '-';
@@ -35,11 +34,14 @@ class FileAttribUtil implements DosAttrs, UnixStat
     }
 
     /**
-     * @noinspection DuplicatedCode
+     * @param int $permission
+     *
+     * @return string
      */
-    public static function getUnixMode(int $permission): string
+    public static function getUnixMode($permission)
     {
         $mode = '';
+        $permission = (int) $permission;
         switch ($permission & self::UNX_IFMT) {
             case self::UNX_IFDIR:
                 $mode .= 'd';

@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Model\Extra\Fields;
 
 use PhpZip\Exception\RuntimeException;
@@ -18,20 +9,30 @@ use PhpZip\Model\ZipEntry;
 /**
  * Simple placeholder for all those extra fields we don't want to deal with.
  */
-final class UnrecognizedExtraField implements ZipExtraField
+class UnrecognizedExtraField implements ZipExtraField
 {
-    private int $headerId;
+    /** @var int */
+    private $headerId;
 
     /** @var string extra field data without Header-ID or length specifier */
-    private string $data;
+    private $data;
 
-    public function __construct(int $headerId, string $data)
+    /**
+     * UnrecognizedExtraField constructor.
+     *
+     * @param int    $headerId
+     * @param string $data
+     */
+    public function __construct($headerId, $data)
     {
-        $this->headerId = $headerId;
-        $this->data = $data;
+        $this->headerId = (int) $headerId;
+        $this->data = (string) $data;
     }
 
-    public function setHeaderId(int $headerId): void
+    /**
+     * @param int $headerId
+     */
+    public function setHeaderId($headerId)
     {
         $this->headerId = $headerId;
     }
@@ -40,8 +41,10 @@ final class UnrecognizedExtraField implements ZipExtraField
      * Returns the Header ID (type) of this Extra Field.
      * The Header ID is an unsigned short integer (two bytes)
      * which must be constant during the life cycle of this object.
+     *
+     * @return int
      */
-    public function getHeaderId(): int
+    public function getHeaderId()
     {
         return $this->headerId;
     }
@@ -50,11 +53,9 @@ final class UnrecognizedExtraField implements ZipExtraField
      * Populate data from this array as if it was in local file data.
      *
      * @param string        $buffer the buffer to read data from
-     * @param ZipEntry|null $entry  optional zip entry
-     *
-     * @return UnrecognizedExtraField
+     * @param ZipEntry|null $entry
      */
-    public static function unpackLocalFileData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackLocalFileData($buffer, ZipEntry $entry = null)
     {
         throw new RuntimeException('Unsupport parse');
     }
@@ -63,11 +64,9 @@ final class UnrecognizedExtraField implements ZipExtraField
      * Populate data from this array as if it was in central directory data.
      *
      * @param string        $buffer the buffer to read data from
-     * @param ZipEntry|null $entry  optional zip entry
-     *
-     * @return UnrecognizedExtraField
+     * @param ZipEntry|null $entry
      */
-    public static function unpackCentralDirData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackCentralDirData($buffer, ZipEntry $entry = null)
     {
         throw new RuntimeException('Unsupport parse');
     }
@@ -75,7 +74,7 @@ final class UnrecognizedExtraField implements ZipExtraField
     /**
      * {@inheritdoc}
      */
-    public function packLocalFileData(): string
+    public function packLocalFileData()
     {
         return $this->data;
     }
@@ -83,22 +82,31 @@ final class UnrecognizedExtraField implements ZipExtraField
     /**
      * {@inheritdoc}
      */
-    public function packCentralDirData(): string
+    public function packCentralDirData()
     {
         return $this->data;
     }
 
-    public function getData(): string
+    /**
+     * @return string
+     */
+    public function getData()
     {
         return $this->data;
     }
 
-    public function setData(string $data): void
+    /**
+     * @param string $data
+     */
+    public function setData($data)
     {
-        $this->data = $data;
+        $this->data = (string) $data;
     }
 
-    public function __toString(): string
+    /**
+     * @return string
+     */
+    public function __toString()
     {
         $args = [$this->headerId, $this->data];
         $format = '0x%04x Unrecognized Extra Field: "%s"';

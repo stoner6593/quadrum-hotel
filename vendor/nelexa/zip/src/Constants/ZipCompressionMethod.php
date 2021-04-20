@@ -1,34 +1,28 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Constants;
 
 use PhpZip\Exception\ZipUnsupportMethodException;
 
+/**
+ * Class ZipCompressionMethod.
+ */
 final class ZipCompressionMethod
 {
     /** @var int Compression method Store */
-    public const STORED = 0;
+    const STORED = 0;
 
     /** @var int Compression method Deflate */
-    public const DEFLATED = 8;
+    const DEFLATED = 8;
 
     /** @var int Compression method Bzip2 */
-    public const BZIP2 = 12;
+    const BZIP2 = 12;
 
     /** @var int Compression method AES-Encryption */
-    public const WINZIP_AES = 99;
+    const WINZIP_AES = 99;
 
     /** @var array Compression Methods */
-    private const ZIP_COMPRESSION_METHODS = [
+    private static $ZIP_COMPRESSION_METHODS = [
         self::STORED => 'Stored',
         1 => 'Shrunk',
         2 => 'Reduced compression factor 1',
@@ -55,15 +49,22 @@ final class ZipCompressionMethod
         self::WINZIP_AES => 'AES Encryption',
     ];
 
-    public static function getCompressionMethodName(int $value): string
+    /**
+     * @param int $value
+     *
+     * @return string
+     */
+    public static function getCompressionMethodName($value)
     {
-        return self::ZIP_COMPRESSION_METHODS[$value] ?? 'Unknown Method';
+        return isset(self::$ZIP_COMPRESSION_METHODS[$value]) ?
+            self::$ZIP_COMPRESSION_METHODS[$value] :
+            'Unknown Method';
     }
 
     /**
      * @return int[]
      */
-    public static function getSupportMethods(): array
+    public static function getSupportMethods()
     {
         static $methods;
 
@@ -82,10 +83,14 @@ final class ZipCompressionMethod
     }
 
     /**
+     * @param int $compressionMethod
+     *
      * @throws ZipUnsupportMethodException
      */
-    public static function checkSupport(int $compressionMethod): void
+    public static function checkSupport($compressionMethod)
     {
+        $compressionMethod = (int) $compressionMethod;
+
         if (!\in_array($compressionMethod, self::getSupportMethods(), true)) {
             throw new ZipUnsupportMethodException(sprintf(
                 'Compression method %d (%s) is not supported.',

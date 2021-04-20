@@ -20,16 +20,19 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $util = Util::getInstance();
 
+
 $dato=new Generaxml($_POST['idalquiler'],$_POST['tipo_documento'],@$_POST['finicio'],@$_POST['ffin']);
 
 if($_POST['idalquiler']==0 && $_POST['tipo_documento']==0){
-
+    echo $_POST['idalquiler'].'-'.$_POST['tipo_documento'].'-123';
     $dato->_xmlResumen();
 }else{
     if($_POST['tipo_servicio']=='AL') {
+        echo $_POST['idalquiler'].'-'.$_POST['tipo_documento'].'-456';
         $dato->generar_xml();
     }
     if($_POST['tipo_servicio']=='VE') {
+        echo $_POST['idalquiler'].'-'.$_POST['tipo_documento'].'-789';
         $dato->generar_xml_venta();
     }
 }
@@ -59,6 +62,7 @@ class Generaxml
 
     function __construct($idalquiler, $tipo_documento, $finicio = null, $ffin)
     {
+    
         $this->idalquiler = $idalquiler;
         $this->tipo_documento = $tipo_documento;
         $this->finicio = $finicio;
@@ -118,7 +122,7 @@ class Generaxml
 
     public function generar_xml()
     {
-
+      
         $db = new conexion();
         $link = $db->conexion();
 

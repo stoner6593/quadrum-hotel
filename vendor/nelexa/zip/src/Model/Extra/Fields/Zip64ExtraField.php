@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Model\Extra\Fields;
 
 use PhpZip\Constants\ZipConstants;
@@ -16,30 +7,43 @@ use PhpZip\Exception\RuntimeException;
 use PhpZip\Exception\ZipException;
 use PhpZip\Model\Extra\ZipExtraField;
 use PhpZip\Model\ZipEntry;
+use PhpZip\Util\PackUtil;
 
 /**
  * ZIP64 Extra Field.
  *
  * @see https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT .ZIP File Format Specification
  */
-final class Zip64ExtraField implements ZipExtraField
+class Zip64ExtraField implements ZipExtraField
 {
     /** @var int The Header ID for a ZIP64 Extended Information Extra Field. */
-    public const HEADER_ID = 0x0001;
+    const HEADER_ID = 0x0001;
 
-    private ?int $uncompressedSize;
+    /** @var int|null */
+    private $uncompressedSize;
 
-    private ?int $compressedSize;
+    /** @var int|null */
+    private $compressedSize;
 
-    private ?int $localHeaderOffset;
+    /** @var int|null */
+    private $localHeaderOffset;
 
-    private ?int $diskStart;
+    /** @var int|null */
+    private $diskStart;
 
+    /**
+     * Zip64ExtraField constructor.
+     *
+     * @param int|null $uncompressedSize
+     * @param int|null $compressedSize
+     * @param int|null $localHeaderOffset
+     * @param int|null $diskStart
+     */
     public function __construct(
-        ?int $uncompressedSize = null,
-        ?int $compressedSize = null,
-        ?int $localHeaderOffset = null,
-        ?int $diskStart = null
+        $uncompressedSize = null,
+        $compressedSize = null,
+        $localHeaderOffset = null,
+        $diskStart = null
     ) {
         $this->uncompressedSize = $uncompressedSize;
         $this->compressedSize = $compressedSize;
@@ -51,8 +55,10 @@ final class Zip64ExtraField implements ZipExtraField
      * Returns the Header ID (type) of this Extra Field.
      * The Header ID is an unsigned short integer (two bytes)
      * which must be constant during the life cycle of this object.
+     *
+     * @return int
      */
-    public function getHeaderId(): int
+    public function getHeaderId()
     {
         return self::HEADER_ID;
     }
@@ -60,14 +66,14 @@ final class Zip64ExtraField implements ZipExtraField
     /**
      * Populate data from this array as if it was in local file data.
      *
-     * @param string    $buffer the buffer to read data from
-     * @param ?ZipEntry $entry
+     * @param string        $buffer the buffer to read data from
+     * @param ZipEntry|null $entry
      *
      * @throws ZipException on error
      *
      * @return Zip64ExtraField
      */
-    public static function unpackLocalFileData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackLocalFileData($buffer, ZipEntry $entry = null)
     {
         $length = \strlen($buffer);
 
@@ -85,10 +91,8 @@ final class Zip64ExtraField implements ZipExtraField
             );
         }
 
-        [
-            'uncompressedSize' => $uncompressedSize,
-            'compressedSize' => $compressedSize,
-        ] = unpack('PuncompressedSize/PcompressedSize', substr($buffer, 0, 16));
+        $uncompressedSize = PackUtil::unpackLongLE(substr($buffer, 0, 8));
+        $compressedSize = PackUtil::unpackLongLE(substr($buffer, 8, 8));
 
         return new self($uncompressedSize, $compressedSize);
     }
@@ -96,14 +100,14 @@ final class Zip64ExtraField implements ZipExtraField
     /**
      * Populate data from this array as if it was in central directory data.
      *
-     * @param string    $buffer the buffer to read data from
-     * @param ?ZipEntry $entry
+     * @param string        $buffer the buffer to read data from
+     * @param ZipEntry|null $entry
      *
      * @throws ZipException
      *
      * @return Zip64ExtraField
      */
-    public static function unpackCentralDirData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackCentralDirData($buffer, ZipEntry $entry = null)
     {
         if ($entry === null) {
             throw new RuntimeException('zipEntry is null');
@@ -121,7 +125,7 @@ final class Zip64ExtraField implements ZipExtraField
             if ($remaining < 8) {
                 throw new ZipException('ZIP64 extension corrupt (no uncompressed size).');
             }
-            $uncompressedSize = unpack('P', substr($buffer, $length - $remaining, 8))[1];
+            $uncompressedSize = PackUtil::unpackLongLE(substr($buffer, $length - $remaining, 8));
             $remaining -= 8;
         }
 
@@ -129,7 +133,7 @@ final class Zip64ExtraField implements ZipExtraField
             if ($remaining < 8) {
                 throw new ZipException('ZIP64 extension corrupt (no compressed size).');
             }
-            $compressedSize = unpack('P', substr($buffer, $length - $remaining, 8))[1];
+            $compressedSize = PackUtil::unpackLongLE(substr($buffer, $length - $remaining, 8));
             $remaining -= 8;
         }
 
@@ -137,7 +141,7 @@ final class Zip64ExtraField implements ZipExtraField
             if ($remaining < 8) {
                 throw new ZipException('ZIP64 extension corrupt (no relative local header offset).');
             }
-            $localHeaderOffset = unpack('P', substr($buffer, $length - $remaining, 8))[1];
+            $localHeaderOffset = PackUtil::unpackLongLE(substr($buffer, $length - $remaining, 8));
             $remaining -= 8;
         }
 
@@ -154,7 +158,7 @@ final class Zip64ExtraField implements ZipExtraField
      *
      * @return string the data
      */
-    public function packLocalFileData(): string
+    public function packLocalFileData()
     {
         if ($this->uncompressedSize !== null || $this->compressedSize !== null) {
             if ($this->uncompressedSize === null || $this->compressedSize === null) {
@@ -169,16 +173,19 @@ final class Zip64ExtraField implements ZipExtraField
         return '';
     }
 
-    private function packSizes(): string
+    /**
+     * @return string
+     */
+    private function packSizes()
     {
         $data = '';
 
         if ($this->uncompressedSize !== null) {
-            $data .= pack('P', $this->uncompressedSize);
+            $data .= PackUtil::packLongLE($this->uncompressedSize);
         }
 
         if ($this->compressedSize !== null) {
-            $data .= pack('P', $this->compressedSize);
+            $data .= PackUtil::packLongLE($this->compressedSize);
         }
 
         return $data;
@@ -190,12 +197,12 @@ final class Zip64ExtraField implements ZipExtraField
      *
      * @return string the data
      */
-    public function packCentralDirData(): string
+    public function packCentralDirData()
     {
         $data = $this->packSizes();
 
         if ($this->localHeaderOffset !== null) {
-            $data .= pack('P', $this->localHeaderOffset);
+            $data .= PackUtil::packLongLE($this->localHeaderOffset);
         }
 
         if ($this->diskStart !== null) {
@@ -205,47 +212,74 @@ final class Zip64ExtraField implements ZipExtraField
         return $data;
     }
 
-    public function getUncompressedSize(): ?int
+    /**
+     * @return int|null
+     */
+    public function getUncompressedSize()
     {
         return $this->uncompressedSize;
     }
 
-    public function setUncompressedSize(?int $uncompressedSize): void
+    /**
+     * @param int|null $uncompressedSize
+     */
+    public function setUncompressedSize($uncompressedSize)
     {
         $this->uncompressedSize = $uncompressedSize;
     }
 
-    public function getCompressedSize(): ?int
+    /**
+     * @return int|null
+     */
+    public function getCompressedSize()
     {
         return $this->compressedSize;
     }
 
-    public function setCompressedSize(?int $compressedSize): void
+    /**
+     * @param int|null $compressedSize
+     */
+    public function setCompressedSize($compressedSize)
     {
         $this->compressedSize = $compressedSize;
     }
 
-    public function getLocalHeaderOffset(): ?int
+    /**
+     * @return int|null
+     */
+    public function getLocalHeaderOffset()
     {
         return $this->localHeaderOffset;
     }
 
-    public function setLocalHeaderOffset(?int $localHeaderOffset): void
+    /**
+     * @param int|null $localHeaderOffset
+     */
+    public function setLocalHeaderOffset($localHeaderOffset)
     {
         $this->localHeaderOffset = $localHeaderOffset;
     }
 
-    public function getDiskStart(): ?int
+    /**
+     * @return int|null
+     */
+    public function getDiskStart()
     {
         return $this->diskStart;
     }
 
-    public function setDiskStart(?int $diskStart): void
+    /**
+     * @param int|null $diskStart
+     */
+    public function setDiskStart($diskStart)
     {
         $this->diskStart = $diskStart;
     }
 
-    public function __toString(): string
+    /**
+     * @return string
+     */
+    public function __toString()
     {
         $args = [self::HEADER_ID];
         $format = '0x%04x ZIP64: ';

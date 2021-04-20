@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Model\Extra\Fields;
 
 use PhpZip\Model\Extra\ZipExtraField;
@@ -62,24 +53,30 @@ use PhpZip\Model\ZipEntry;
  * mid-1994. Therefore future archiving software should continue to
  * support it.
  */
-final class OldUnixExtraField implements ZipExtraField
+class OldUnixExtraField implements ZipExtraField
 {
     /** @var int Header id */
-    public const HEADER_ID = 0x5855;
+    const HEADER_ID = 0x5855;
 
     /** @var int|null Access timestamp */
-    private ?int $accessTime;
+    private $accessTime;
 
     /** @var int|null Modify timestamp */
-    private ?int $modifyTime;
+    private $modifyTime;
 
     /** @var int|null User id */
-    private ?int $uid;
+    private $uid;
 
     /** @var int|null Group id */
-    private ?int $gid;
+    private $gid;
 
-    public function __construct(?int $accessTime, ?int $modifyTime, ?int $uid, ?int $gid)
+    /**
+     * @param int|null $accessTime
+     * @param int|null $modifyTime
+     * @param int|null $uid
+     * @param int|null $gid
+     */
+    public function __construct($accessTime, $modifyTime, $uid, $gid)
     {
         $this->accessTime = $accessTime;
         $this->modifyTime = $modifyTime;
@@ -91,8 +88,10 @@ final class OldUnixExtraField implements ZipExtraField
      * Returns the Header ID (type) of this Extra Field.
      * The Header ID is an unsigned short integer (two bytes)
      * which must be constant during the life cycle of this object.
+     *
+     * @return int
      */
-    public function getHeaderId(): int
+    public function getHeaderId()
     {
         return self::HEADER_ID;
     }
@@ -101,11 +100,11 @@ final class OldUnixExtraField implements ZipExtraField
      * Populate data from this array as if it was in local file data.
      *
      * @param string        $buffer the buffer to read data from
-     * @param ZipEntry|null $entry  optional zip entry
+     * @param ZipEntry|null $entry
      *
      * @return OldUnixExtraField
      */
-    public static function unpackLocalFileData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackLocalFileData($buffer, ZipEntry $entry = null)
     {
         $length = \strlen($buffer);
 
@@ -134,11 +133,11 @@ final class OldUnixExtraField implements ZipExtraField
      * Populate data from this array as if it was in central directory data.
      *
      * @param string        $buffer the buffer to read data from
-     * @param ZipEntry|null $entry  optional zip entry
+     * @param ZipEntry|null $entry
      *
      * @return OldUnixExtraField
      */
-    public static function unpackCentralDirData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackCentralDirData($buffer, ZipEntry $entry = null)
     {
         $length = \strlen($buffer);
 
@@ -161,7 +160,7 @@ final class OldUnixExtraField implements ZipExtraField
      *
      * @return string the data
      */
-    public function packLocalFileData(): string
+    public function packLocalFileData()
     {
         $data = '';
 
@@ -190,7 +189,7 @@ final class OldUnixExtraField implements ZipExtraField
      *
      * @return string the data
      */
-    public function packCentralDirData(): string
+    public function packCentralDirData()
     {
         $data = '';
 
@@ -205,67 +204,100 @@ final class OldUnixExtraField implements ZipExtraField
         return $data;
     }
 
-    public function getAccessTime(): ?int
+    /**
+     * @return int|null
+     */
+    public function getAccessTime()
     {
         return $this->accessTime;
     }
 
-    public function setAccessTime(?int $accessTime): void
+    /**
+     * @param int|null $accessTime
+     */
+    public function setAccessTime($accessTime)
     {
         $this->accessTime = $accessTime;
     }
 
-    public function getAccessDateTime(): ?\DateTimeInterface
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getAccessDateTime()
     {
         try {
-            return $this->accessTime === null ? null
-                : new \DateTimeImmutable('@' . $this->accessTime);
+            return $this->accessTime === null ? null :
+                new \DateTimeImmutable('@' . $this->accessTime);
         } catch (\Exception $e) {
             return null;
         }
     }
 
-    public function getModifyTime(): ?int
+    /**
+     * @return int|null
+     */
+    public function getModifyTime()
     {
         return $this->modifyTime;
     }
 
-    public function setModifyTime(?int $modifyTime): void
+    /**
+     * @param int|null $modifyTime
+     */
+    public function setModifyTime($modifyTime)
     {
         $this->modifyTime = $modifyTime;
     }
 
-    public function getModifyDateTime(): ?\DateTimeInterface
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getModifyDateTime()
     {
         try {
-            return $this->modifyTime === null ? null
-                : new \DateTimeImmutable('@' . $this->modifyTime);
+            return $this->modifyTime === null ? null :
+                new \DateTimeImmutable('@' . $this->modifyTime);
         } catch (\Exception $e) {
             return null;
         }
     }
 
-    public function getUid(): ?int
+    /**
+     * @return int|null
+     */
+    public function getUid()
     {
         return $this->uid;
     }
 
-    public function setUid(?int $uid): void
+    /**
+     * @param int|null $uid
+     */
+    public function setUid($uid)
     {
         $this->uid = $uid;
     }
 
-    public function getGid(): ?int
+    /**
+     * @return int|null
+     */
+    public function getGid()
     {
         return $this->gid;
     }
 
-    public function setGid(?int $gid): void
+    /**
+     * @param int|null $gid
+     */
+    public function setGid($gid)
     {
         $this->gid = $gid;
     }
 
-    public function __toString(): string
+    /**
+     * @return string
+     */
+    public function __toString()
     {
         $args = [self::HEADER_ID];
         $format = '0x%04x OldUnix:';

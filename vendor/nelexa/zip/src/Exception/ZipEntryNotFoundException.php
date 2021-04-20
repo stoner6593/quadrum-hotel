@@ -1,26 +1,23 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Exception;
 
 use PhpZip\Model\ZipEntry;
 
 /**
  * Thrown if entry not found.
+ *
+ * @author Ne-Lexa alexey@nelexa.ru
+ * @license MIT
  */
 class ZipEntryNotFoundException extends ZipException
 {
-    private string $entryName;
+    /** @var string */
+    private $entryName;
 
     /**
+     * ZipEntryNotFoundException constructor.
+     *
      * @param ZipEntry|string $entryName
      */
     public function __construct($entryName)
@@ -33,7 +30,10 @@ class ZipEntryNotFoundException extends ZipException
         $this->entryName = $entryName;
     }
 
-    public function getEntryName(): string
+    /**
+     * @return string
+     */
+    public function getEntryName()
     {
         return $this->entryName;
     }

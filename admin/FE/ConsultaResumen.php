@@ -54,7 +54,7 @@ require_once "../../init.php";
 				$client->__getFunctions();
 				
 
-				$contentFile = new SoapVar($zipEnviar, XSD_BYTE);
+				//$contentFile = new SoapVar($zipEnviar, XSD_BYTE);
 
 
 				try {
@@ -244,7 +244,8 @@ require_once "../../init.php";
 	                throw new \Exception($error);
 				}
 	            // archivo XML
-	            $archivoXML = "CDR/".$file[0];
+			
+	            $archivoXML = __DIR__ ."\\CDR\\".$file[1];
 	            //echo $archivoXML;
 	            // Se valida que exista el archivo XML
 	            if (!file_exists($archivoXML)) {
@@ -306,6 +307,7 @@ require_once "../../init.php";
 
 
 	            // NOTAS
+				$this->SUNAT_NOTE ='';
 	            $Notas = $xml->getElementsByTagName('Note');
 	            foreach ($Notas as $nota) {
 	                $desNota = $nota->nodeValue;

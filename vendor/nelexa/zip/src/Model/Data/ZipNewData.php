@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Model\Data;
 
 use PhpZip\Model\ZipData;
@@ -26,16 +17,19 @@ class ZipNewData implements ZipData
      *
      * @var array<int, int> array of resource ids and the number of class clones
      */
-    private static array $guardClonedStream = [];
+    private static $guardClonedStream = [];
 
-    private ZipEntry $zipEntry;
+    /** @var ZipEntry */
+    private $zipEntry;
 
     /** @var resource */
     private $stream;
 
     /**
-     * @param string|resource $data Raw string data or resource
-     * @noinspection PhpMissingParamTypeInspection
+     * ZipStringData constructor.
+     *
+     * @param ZipEntry        $zipEntry
+     * @param string|resource $data
      */
     public function __construct(ZipEntry $zipEntry, $data)
     {
@@ -57,10 +51,10 @@ class ZipNewData implements ZipData
         }
 
         $resourceId = (int) $this->stream;
-        self::$guardClonedStream[$resourceId]
-            = isset(self::$guardClonedStream[$resourceId])
-                ? self::$guardClonedStream[$resourceId] + 1
-                : 0;
+        self::$guardClonedStream[$resourceId] =
+            isset(self::$guardClonedStream[$resourceId]) ?
+                self::$guardClonedStream[$resourceId] + 1 :
+                0;
     }
 
     /**
@@ -78,7 +72,7 @@ class ZipNewData implements ZipData
     /**
      * @return string returns data as string
      */
-    public function getDataAsString(): string
+    public function getDataAsString()
     {
         $stream = $this->getDataAsStream();
         $pos = ftell($stream);
@@ -95,7 +89,7 @@ class ZipNewData implements ZipData
     /**
      * @param resource $outStream
      */
-    public function copyDataToStream($outStream): void
+    public function copyDataToStream($outStream)
     {
         $stream = $this->getDataAsStream();
         rewind($stream);
@@ -108,10 +102,10 @@ class ZipNewData implements ZipData
     public function __clone()
     {
         $resourceId = (int) $this->stream;
-        self::$guardClonedStream[$resourceId]
-            = isset(self::$guardClonedStream[$resourceId])
-                ? self::$guardClonedStream[$resourceId] + 1
-                : 1;
+        self::$guardClonedStream[$resourceId] =
+            isset(self::$guardClonedStream[$resourceId]) ?
+                self::$guardClonedStream[$resourceId] + 1 :
+                1;
     }
 
     /**

@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\IO;
 
 use PhpZip\Constants\DosCodePage;
@@ -22,18 +13,30 @@ use PhpZip\Exception\ZipUnsupportMethodException;
 use PhpZip\IO\Filter\Cipher\Pkware\PKEncryptionStreamFilter;
 use PhpZip\IO\Filter\Cipher\WinZipAes\WinZipAesEncryptionStreamFilter;
 use PhpZip\Model\Data\ZipSourceFileData;
+use PhpZip\Model\Extra\Fields\ApkAlignmentExtraField;
 use PhpZip\Model\Extra\Fields\WinZipAesExtraField;
 use PhpZip\Model\Extra\Fields\Zip64ExtraField;
 use PhpZip\Model\ZipContainer;
 use PhpZip\Model\ZipEntry;
+use PhpZip\Util\PackUtil;
+use PhpZip\Util\StringUtil;
 
+/**
+ * Class ZipWriter.
+ */
 class ZipWriter
 {
     /** @var int Chunk read size */
-    public const CHUNK_SIZE = 8192;
+    const CHUNK_SIZE = 8192;
 
-    protected ZipContainer $zipContainer;
+    /** @var ZipContainer */
+    protected $zipContainer;
 
+    /**
+     * ZipWriter constructor.
+     *
+     * @param ZipContainer $container
+     */
     public function __construct(ZipContainer $container)
     {
         // we clone the container so that the changes made to
@@ -46,7 +49,7 @@ class ZipWriter
      *
      * @throws ZipException
      */
-    public function write($outStream): void
+    public function write($outStream)
     {
         if (!\is_resource($outStream)) {
             throw new \InvalidArgumentException('$outStream must be resource');
@@ -59,7 +62,7 @@ class ZipWriter
         $this->writeEndOfCentralDirectoryBlock($outStream, $cdOffset, $cdSize);
     }
 
-    protected function beforeWrite(): void
+    protected function beforeWrite()
     {
     }
 
@@ -68,7 +71,7 @@ class ZipWriter
      *
      * @throws ZipException
      */
-    protected function writeLocalBlock($outStream): void
+    protected function writeLocalBlock($outStream)
     {
         $zipEntries = $this->zipContainer->getEntries();
 
@@ -84,11 +87,17 @@ class ZipWriter
 
     /**
      * @param resource $outStream
+     * @param ZipEntry $entry
      *
      * @throws ZipException
      */
-    protected function writeLocalHeader($outStream, ZipEntry $entry): void
+    protected function writeLocalHeader($outStream, ZipEntry $entry)
     {
+        // todo in 4.0 version move zipalign functional to ApkWriter class
+        if ($this->zipContainer->isZipAlign()) {
+            $this->zipAlign($outStream, $entry);
+        }
+
         $relativeOffset = ftell($outStream);
         $entry->setLocalHeaderOffset($relativeOffset);
 
@@ -96,8 +105,8 @@ class ZipWriter
             $entry->enableDataDescriptor(true);
         }
 
-        $dd = $entry->isDataDescriptorRequired()
-            || $entry->isDataDescriptorEnabled();
+        $dd = $entry->isDataDescriptorRequired() ||
+            $entry->isDataDescriptorEnabled();
 
         $compressedSize = $entry->getCompressedSize();
         $uncompressedSize = $entry->getUncompressedSize();
@@ -194,15 +203,74 @@ class ZipWriter
     }
 
     /**
-     * Merges the local file data fields of the given ZipExtraFields.
+     * @param resource $outStream
+     * @param ZipEntry $entry
      *
      * @throws ZipException
      */
-    protected function getExtraFieldsContents(ZipEntry $entry, bool $local): string
+    private function zipAlign($outStream, ZipEntry $entry)
     {
-        $collection = $local
-            ? $entry->getLocalExtraFields()
-            : $entry->getCdExtraFields();
+        if (!$entry->isDirectory() && $entry->getCompressionMethod() === ZipCompressionMethod::STORED) {
+            $entry->removeExtraField(ApkAlignmentExtraField::HEADER_ID);
+
+            $extra = $this->getExtraFieldsContents($entry, true);
+            $extraLength = \strlen($extra);
+            $name = $entry->getName();
+
+            $dosCharset = $entry->getCharset();
+
+            if ($dosCharset !== null && !$entry->isUtf8Flag()) {
+                $name = DosCodePage::fromUTF8($name, $dosCharset);
+            }
+            $nameLength = \strlen($name);
+
+            $multiple = ApkAlignmentExtraField::ALIGNMENT_BYTES;
+
+            if (StringUtil::endsWith($name, '.so')) {
+                $multiple = ApkAlignmentExtraField::COMMON_PAGE_ALIGNMENT_BYTES;
+            }
+
+            $offset = ftell($outStream);
+
+            $dataMinStartOffset =
+                $offset +
+                ZipConstants::LFH_FILENAME_POS +
+                $extraLength +
+                $nameLength;
+
+            $padding =
+                ($multiple - ($dataMinStartOffset % $multiple))
+                % $multiple;
+
+            if ($padding > 0) {
+                $dataMinStartOffset += ApkAlignmentExtraField::MIN_SIZE;
+                $padding =
+                    ($multiple - ($dataMinStartOffset % $multiple))
+                    % $multiple;
+
+                $entry->getLocalExtraFields()->add(
+                    new ApkAlignmentExtraField($multiple, $padding)
+                );
+            }
+        }
+    }
+
+    /**
+     * Merges the local file data fields of the given ZipExtraFields.
+     *
+     * @param ZipEntry $entry
+     * @param bool     $local
+     *
+     * @throws ZipException
+     *
+     * @return string
+     */
+    protected function getExtraFieldsContents(ZipEntry $entry, $local)
+    {
+        $local = (bool) $local;
+        $collection = $local ?
+            $entry->getLocalExtraFields() :
+            $entry->getCdExtraFields();
         $extraData = '';
 
         foreach ($collection as $extraField) {
@@ -236,10 +304,11 @@ class ZipWriter
 
     /**
      * @param resource $outStream
+     * @param ZipEntry $entry
      *
      * @throws ZipException
      */
-    protected function writeData($outStream, ZipEntry $entry): void
+    protected function writeData($outStream, ZipEntry $entry)
     {
         $zipData = $entry->getData();
 
@@ -380,8 +449,11 @@ class ZipWriter
     /**
      * @param resource $inStream
      * @param resource $outStream
+     * @param int      $size
+     *
+     * @return int
      */
-    private function writeAndCountChecksum($inStream, $outStream, int $size): int
+    private function writeAndCountChecksum($inStream, $outStream, $size)
     {
         $contextHash = hash_init('crc32b');
         $offset = 0;
@@ -399,6 +471,7 @@ class ZipWriter
 
     /**
      * @param resource $outStream
+     * @param ZipEntry $entry
      *
      * @throws ZipUnsupportMethodException
      *
@@ -450,10 +523,12 @@ class ZipWriter
 
     /**
      * @param resource $outStream
+     * @param ZipEntry $entry
+     * @param int      $size
      *
      * @return resource|null
      */
-    protected function appendEncryptionFilter($outStream, ZipEntry $entry, int $size)
+    protected function appendEncryptionFilter($outStream, ZipEntry $entry, $size)
     {
         $encContextFilter = null;
 
@@ -485,8 +560,9 @@ class ZipWriter
 
     /**
      * @param resource $outStream
+     * @param ZipEntry $entry
      */
-    protected function writeDataDescriptor($outStream, ZipEntry $entry): void
+    protected function writeDataDescriptor($outStream, ZipEntry $entry)
     {
         $crc = $entry->getCrc();
 
@@ -509,16 +585,14 @@ class ZipWriter
         );
 
         if (
-            $entry->isZip64ExtensionsRequired()
-            || $entry->getLocalExtraFields()->has(Zip64ExtraField::HEADER_ID)
+            $entry->isZip64ExtensionsRequired() ||
+            $entry->getLocalExtraFields()->has(Zip64ExtraField::HEADER_ID)
         ) {
-            $dd = pack(
-                'PP',
+            $dd =
                 // compressed size                 8 bytes
-                $entry->getCompressedSize(),
+                PackUtil::packLongLE($entry->getCompressedSize()) .
                 // uncompressed size               8 bytes
-                $entry->getUncompressedSize()
-            );
+                PackUtil::packLongLE($entry->getUncompressedSize());
         } else {
             $dd = pack(
                 'VV',
@@ -537,7 +611,7 @@ class ZipWriter
      *
      * @throws ZipException
      */
-    protected function writeCentralDirectoryBlock($outStream): void
+    protected function writeCentralDirectoryBlock($outStream)
     {
         foreach ($this->zipContainer->getEntries() as $outputEntry) {
             $this->writeCentralDirectoryHeader($outStream, $outputEntry);
@@ -548,10 +622,11 @@ class ZipWriter
      * Writes a Central File Header record.
      *
      * @param resource $outStream
+     * @param ZipEntry $entry
      *
      * @throws ZipException
      */
-    protected function writeCentralDirectoryHeader($outStream, ZipEntry $entry): void
+    protected function writeCentralDirectoryHeader($outStream, ZipEntry $entry)
     {
         $compressedSize = $entry->getCompressedSize();
         $uncompressedSize = $entry->getUncompressedSize();
@@ -560,9 +635,9 @@ class ZipWriter
         $entry->getCdExtraFields()->remove(Zip64ExtraField::HEADER_ID);
 
         if (
-            $localHeaderOffset > ZipConstants::ZIP64_MAGIC
-            || $compressedSize > ZipConstants::ZIP64_MAGIC
-            || $uncompressedSize > ZipConstants::ZIP64_MAGIC
+            $localHeaderOffset > ZipConstants::ZIP64_MAGIC ||
+            $compressedSize > ZipConstants::ZIP64_MAGIC ||
+            $uncompressedSize > ZipConstants::ZIP64_MAGIC
         ) {
             $zip64ExtraField = new Zip64ExtraField();
 
@@ -670,12 +745,14 @@ class ZipWriter
 
     /**
      * @param resource $outStream
+     * @param int      $centralDirectoryOffset
+     * @param int      $centralDirectorySize
      */
     protected function writeEndOfCentralDirectoryBlock(
         $outStream,
-        int $centralDirectoryOffset,
-        int $centralDirectorySize
-    ): void {
+        $centralDirectoryOffset,
+        $centralDirectorySize
+    ) {
         $cdEntriesCount = \count($this->zipContainer);
 
         $cdEntriesZip64 = $cdEntriesCount > 0xffff;
@@ -690,7 +767,7 @@ class ZipWriter
             $zip64EndOfCentralDirectoryOffset = ftell($outStream);
 
             // find max software version, version needed to extract and most common platform
-            [$softwareVersion, $versionNeededToExtract] = array_reduce(
+            list($softwareVersion, $versionNeededToExtract) = array_reduce(
                 $this->zipContainer->getEntries(),
                 static function (array $carry, ZipEntry $entry) {
                     $carry[0] = max($carry[0], $entry->getSoftwareVersion() & 0xFF);
@@ -709,12 +786,18 @@ class ZipWriter
             fwrite(
                 $outStream,
                 pack(
-                    'VPvvVVPPPPVVPV',
+                    'V',
                     // signature                       4 bytes  (0x06064b50)
-                    ZipConstants::ZIP64_END_CD,
-                    // size of zip64 end of central
-                    // directory record                8 bytes
-                    ZipConstants::ZIP64_END_OF_CD_LEN - 12,
+                    ZipConstants::ZIP64_END_CD
+                )
+            );
+            // size of zip64 end of central
+            // directory record                8 bytes
+            fwrite($outStream, PackUtil::packLongLE(ZipConstants::ZIP64_END_OF_CD_LEN - 12));
+            fwrite(
+                $outStream,
+                pack(
+                    'vvVV',
                     // version made by                 2 bytes
                     $versionMadeBy & 0xFFFF,
                     // version needed to extract       2 bytes
@@ -723,32 +806,44 @@ class ZipWriter
                     0,
                     // number of the disk with the
                     // start of the central directory  4 bytes
-                    0,
-                    // total number of entries in the
-                    // central directory on this disk  8 bytes
-                    $cdEntriesCount,
-                    // total number of entries in the
-                    // central directory               8 bytes
-                    $cdEntriesCount,
-                    // size of the central directory   8 bytes
-                    $centralDirectorySize,
-                    // offset of start of central
-                    // directory with respect to
-                    // the starting disk number        8 bytes
-                    $centralDirectoryOffset,
+                    0
+                )
+            );
+
+            fwrite(
+                $outStream,
+                // total number of entries in the
+                // central directory on this disk  8 bytes
+                PackUtil::packLongLE($cdEntriesCount) .
+                // total number of entries in the
+                // central directory               8 bytes
+                PackUtil::packLongLE($cdEntriesCount) .
+                // size of the central directory   8 bytes
+                PackUtil::packLongLE($centralDirectorySize) .
+                // offset of start of central
+                // directory with respect to
+                // the starting disk number        8 bytes
+                PackUtil::packLongLE($centralDirectoryOffset)
+            );
+
+            // write zip64 end of central directory locator
+            fwrite(
+                $outStream,
+                pack(
+                    'VV',
                     // zip64 end of central dir locator
                     // signature                       4 bytes  (0x07064b50)
                     ZipConstants::ZIP64_END_CD_LOC,
                     // number of the disk with the
                     // start of the zip64 end of
                     // central directory               4 bytes
-                    0,
-                    // relative offset of the zip64
-                    // end of central directory record 8 bytes
-                    $zip64EndOfCentralDirectoryOffset,
-                    // total number of disks           4 bytes
-                    1
-                )
+                    0
+                ) .
+                // relative offset of the zip64
+                // end of central directory record 8 bytes
+                PackUtil::packLongLE($zip64EndOfCentralDirectoryOffset) .
+                // total number of disks           4 bytes
+                pack('V', 1)
             );
         }
 

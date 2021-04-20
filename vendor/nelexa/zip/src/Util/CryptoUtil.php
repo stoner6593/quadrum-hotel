@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Util;
 
 use PhpZip\Exception\RuntimeException;
@@ -18,8 +9,24 @@ use PhpZip\Exception\RuntimeException;
  *
  * @internal
  */
-final class CryptoUtil
+class CryptoUtil
 {
+    /**
+     * Returns random bytes.
+     *
+     * @param int $length
+     *
+     * @throws \Exception
+     *
+     * @return string
+     *
+     * @deprecated Use random_bytes()
+     */
+    final public static function randomBytes($length)
+    {
+        return random_bytes($length);
+    }
+
     /**
      * Decrypt AES-CTR.
      *
@@ -29,7 +36,7 @@ final class CryptoUtil
      *
      * @return string Raw data
      */
-    public static function decryptAesCtr(string $data, string $key, string $iv): string
+    public static function decryptAesCtr($data, $key, $iv)
     {
         if (\extension_loaded('openssl')) {
             $numBits = \strlen($key) * 8;
@@ -37,7 +44,11 @@ final class CryptoUtil
             return openssl_decrypt($data, 'AES-' . $numBits . '-CTR', $key, \OPENSSL_RAW_DATA, $iv);
         }
 
-        throw new RuntimeException('Openssl extension not loaded');
+        if (\extension_loaded('mcrypt')) {
+            return mcrypt_decrypt(\MCRYPT_RIJNDAEL_128, $key, $data, 'ctr', $iv);
+        }
+
+        throw new RuntimeException('Extension openssl or mcrypt not loaded');
     }
 
     /**
@@ -49,7 +60,7 @@ final class CryptoUtil
      *
      * @return string Encrypted data
      */
-    public static function encryptAesCtr(string $data, string $key, string $iv): string
+    public static function encryptAesCtr($data, $key, $iv)
     {
         if (\extension_loaded('openssl')) {
             $numBits = \strlen($key) * 8;
@@ -57,6 +68,10 @@ final class CryptoUtil
             return openssl_encrypt($data, 'AES-' . $numBits . '-CTR', $key, \OPENSSL_RAW_DATA, $iv);
         }
 
-        throw new RuntimeException('Openssl extension not loaded');
+        if (\extension_loaded('mcrypt')) {
+            return mcrypt_encrypt(\MCRYPT_RIJNDAEL_128, $key, $data, 'ctr', $iv);
+        }
+
+        throw new RuntimeException('Extension openssl or mcrypt not loaded');
     }
 }

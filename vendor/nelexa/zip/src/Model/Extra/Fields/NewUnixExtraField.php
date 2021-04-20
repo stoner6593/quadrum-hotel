@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Model\Extra\Fields;
 
 use PhpZip\Exception\ZipException;
@@ -51,36 +42,45 @@ use PhpZip\Model\ZipEntry;
  * and this extra field are present, the values in this extra field
  * supercede the values in that extra field.
  */
-final class NewUnixExtraField implements ZipExtraField
+class NewUnixExtraField implements ZipExtraField
 {
     /** @var int header id */
-    public const HEADER_ID = 0x7875;
+    const HEADER_ID = 0x7875;
 
     /** ID of the first non-root user created on a unix system. */
-    public const USER_GID_PID = 1000;
+    const USER_GID_PID = 1000;
 
     /** @var int version of this extra field, currently 1 */
-    private int $version;
+    private $version = 1;
 
     /** @var int User id */
-    private int $uid;
+    private $uid;
 
     /** @var int Group id */
-    private int $gid;
+    private $gid;
 
-    public function __construct(int $version = 1, int $uid = self::USER_GID_PID, int $gid = self::USER_GID_PID)
+    /**
+     * NewUnixExtraField constructor.
+     *
+     * @param int $version
+     * @param int $uid
+     * @param int $gid
+     */
+    public function __construct($version = 1, $uid = self::USER_GID_PID, $gid = self::USER_GID_PID)
     {
-        $this->version = $version;
-        $this->uid = $uid;
-        $this->gid = $gid;
+        $this->version = (int) $version;
+        $this->uid = (int) $uid;
+        $this->gid = (int) $gid;
     }
 
     /**
      * Returns the Header ID (type) of this Extra Field.
      * The Header ID is an unsigned short integer (two bytes)
      * which must be constant during the life cycle of this object.
+     *
+     * @return int
      */
-    public function getHeaderId(): int
+    public function getHeaderId()
     {
         return self::HEADER_ID;
     }
@@ -89,13 +89,13 @@ final class NewUnixExtraField implements ZipExtraField
      * Populate data from this array as if it was in local file data.
      *
      * @param string        $buffer the buffer to read data from
-     * @param ZipEntry|null $entry  optional zip entry
+     * @param ZipEntry|null $entry
      *
      * @throws ZipException
      *
      * @return NewUnixExtraField
      */
-    public static function unpackLocalFileData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackLocalFileData($buffer, ZipEntry $entry = null)
     {
         $length = \strlen($buffer);
 
@@ -103,31 +103,29 @@ final class NewUnixExtraField implements ZipExtraField
             throw new ZipException(sprintf('X7875_NewUnix length is too short, only %s bytes', $length));
         }
         $offset = 0;
-        [
-            'version' => $version,
-            'uidSize' => $uidSize,
-        ] = unpack('Cversion/CuidSize', $buffer);
+        $data = unpack('Cversion/CuidSize', $buffer);
         $offset += 2;
+        $uidSize = $data['uidSize'];
         $gid = self::readSizeIntegerLE(substr($buffer, $offset, $uidSize), $uidSize);
         $offset += $uidSize;
         $gidSize = unpack('C', $buffer[$offset])[1];
         $offset++;
         $uid = self::readSizeIntegerLE(substr($buffer, $offset, $gidSize), $gidSize);
 
-        return new self($version, $gid, $uid);
+        return new self($data['version'], $gid, $uid);
     }
 
     /**
      * Populate data from this array as if it was in central directory data.
      *
      * @param string        $buffer the buffer to read data from
-     * @param ZipEntry|null $entry  optional zip entry
+     * @param ZipEntry|null $entry
      *
      * @throws ZipException
      *
      * @return NewUnixExtraField
      */
-    public static function unpackCentralDirData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackCentralDirData($buffer, ZipEntry $entry = null)
     {
         return self::unpackLocalFileData($buffer, $entry);
     }
@@ -138,7 +136,7 @@ final class NewUnixExtraField implements ZipExtraField
      *
      * @return string the data
      */
-    public function packLocalFileData(): string
+    public function packLocalFileData()
     {
         return pack(
             'CCVCV',
@@ -156,15 +154,20 @@ final class NewUnixExtraField implements ZipExtraField
      *
      * @return string the data
      */
-    public function packCentralDirData(): string
+    public function packCentralDirData()
     {
         return $this->packLocalFileData();
     }
 
     /**
+     * @param string $data
+     * @param int    $size
+     *
      * @throws ZipException
+     *
+     * @return int
      */
-    private static function readSizeIntegerLE(string $data, int $size): int
+    private static function readSizeIntegerLE($data, $size)
     {
         $format = [
             1 => 'C', // unsigned byte
@@ -179,32 +182,50 @@ final class NewUnixExtraField implements ZipExtraField
         return unpack($format[$size], $data)[1];
     }
 
-    public function getUid(): int
+    /**
+     * @return int
+     */
+    public function getUid()
     {
         return $this->uid;
     }
 
-    public function setUid(int $uid): void
+    /**
+     * @param int $uid
+     */
+    public function setUid($uid)
     {
         $this->uid = $uid & 0xffffffff;
     }
 
-    public function getGid(): int
+    /**
+     * @return int
+     */
+    public function getGid()
     {
         return $this->gid;
     }
 
-    public function setGid(int $gid): void
+    /**
+     * @param int $gid
+     */
+    public function setGid($gid)
     {
         $this->gid = $gid & 0xffffffff;
     }
 
-    public function getVersion(): int
+    /**
+     * @return int
+     */
+    public function getVersion()
     {
         return $this->version;
     }
 
-    public function __toString(): string
+    /**
+     * @return string
+     */
+    public function __toString()
     {
         return sprintf(
             '0x%04x NewUnix: UID=%d GID=%d',

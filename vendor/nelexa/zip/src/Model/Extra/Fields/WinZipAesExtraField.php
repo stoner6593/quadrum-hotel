@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Model\Extra\Fields;
 
 use PhpZip\Constants\ZipCompressionMethod;
@@ -24,72 +15,72 @@ use PhpZip\Model\ZipEntry;
  *
  * @see http://www.winzip.com/win/en/aes_tips.htm AES Coding Tips for Developers
  */
-final class WinZipAesExtraField implements ZipExtraField
+class WinZipAesExtraField implements ZipExtraField
 {
     /** @var int Header id */
-    public const HEADER_ID = 0x9901;
+    const HEADER_ID = 0x9901;
 
     /**
      * @var int Data size (currently 7, but subject to possible increase
      *          in the future)
      */
-    public const DATA_SIZE = 7;
+    const DATA_SIZE = 7;
 
     /**
      * @var int The vendor ID field should always be set to the two ASCII
      *          characters "AE"
      */
-    public const VENDOR_ID = 0x4541; // 'A' | ('E' << 8)
+    const VENDOR_ID = 0x4541; // 'A' | ('E' << 8)
 
     /**
      * @var int Entries of this type do include the standard ZIP CRC-32 value.
      *          For use with {@see WinZipAesExtraField::setVendorVersion()}.
      */
-    public const VERSION_AE1 = 1;
+    const VERSION_AE1 = 1;
 
     /**
      * @var int Entries of this type do not include the standard ZIP CRC-32 value.
      *          For use with {@see WinZipAesExtraField::setVendorVersion().
      */
-    public const VERSION_AE2 = 2;
+    const VERSION_AE2 = 2;
 
     /** @var int integer mode value indicating AES encryption 128-bit strength */
-    public const KEY_STRENGTH_128BIT = 0x01;
+    const KEY_STRENGTH_128BIT = 0x01;
 
     /** @var int integer mode value indicating AES encryption 192-bit strength */
-    public const KEY_STRENGTH_192BIT = 0x02;
+    const KEY_STRENGTH_192BIT = 0x02;
 
     /** @var int integer mode value indicating AES encryption 256-bit strength */
-    public const KEY_STRENGTH_256BIT = 0x03;
+    const KEY_STRENGTH_256BIT = 0x03;
 
     /** @var int[] */
-    private const ALLOW_VENDOR_VERSIONS = [
+    private static $allowVendorVersions = [
         self::VERSION_AE1,
         self::VERSION_AE2,
     ];
 
     /** @var array<int, int> */
-    private const ENCRYPTION_STRENGTHS = [
+    private static $encryptionStrengths = [
         self::KEY_STRENGTH_128BIT => 128,
         self::KEY_STRENGTH_192BIT => 192,
         self::KEY_STRENGTH_256BIT => 256,
     ];
 
     /** @var array<int, int> */
-    private const MAP_KEY_STRENGTH_METHODS = [
+    private static $MAP_KEY_STRENGTH_METHODS = [
         self::KEY_STRENGTH_128BIT => ZipEncryptionMethod::WINZIP_AES_128,
         self::KEY_STRENGTH_192BIT => ZipEncryptionMethod::WINZIP_AES_192,
         self::KEY_STRENGTH_256BIT => ZipEncryptionMethod::WINZIP_AES_256,
     ];
 
     /** @var int Integer version number specific to the zip vendor */
-    private int $vendorVersion = self::VERSION_AE1;
+    private $vendorVersion = self::VERSION_AE1;
 
     /** @var int Integer mode value indicating AES encryption strength */
-    private int $keyStrength = self::KEY_STRENGTH_256BIT;
+    private $keyStrength = self::KEY_STRENGTH_256BIT;
 
     /** @var int The actual compression method used to compress the file */
-    private int $compressionMethod;
+    private $compressionMethod;
 
     /**
      * @param int $vendorVersion     Integer version number specific to the zip vendor
@@ -98,7 +89,7 @@ final class WinZipAesExtraField implements ZipExtraField
      *
      * @throws ZipUnsupportMethodException
      */
-    public function __construct(int $vendorVersion, int $keyStrength, int $compressionMethod)
+    public function __construct($vendorVersion, $keyStrength, $compressionMethod)
     {
         $this->setVendorVersion($vendorVersion);
         $this->setKeyStrength($keyStrength);
@@ -106,13 +97,15 @@ final class WinZipAesExtraField implements ZipExtraField
     }
 
     /**
+     * @param ZipEntry $entry
+     *
      * @throws ZipUnsupportMethodException
      *
      * @return WinZipAesExtraField
      */
-    public static function create(ZipEntry $entry): self
+    public static function create(ZipEntry $entry)
     {
-        $keyStrength = array_search($entry->getEncryptionMethod(), self::MAP_KEY_STRENGTH_METHODS, true);
+        $keyStrength = array_search($entry->getEncryptionMethod(), self::$MAP_KEY_STRENGTH_METHODS, true);
 
         if ($keyStrength === false) {
             throw new InvalidArgumentException('Not support encryption method ' . $entry->getEncryptionMethod());
@@ -125,11 +118,11 @@ final class WinZipAesExtraField implements ZipExtraField
         //
         // https://www.winzip.com/win/en/aes_info.html
         $vendorVersion = (
-            $entry->getUncompressedSize() < 20
-            || $entry->getCompressionMethod() === ZipCompressionMethod::BZIP2
-        )
-            ? self::VERSION_AE2
-            : self::VERSION_AE1;
+            $entry->getUncompressedSize() < 20 ||
+            $entry->getCompressionMethod() === ZipCompressionMethod::BZIP2
+        ) ?
+            self::VERSION_AE2 :
+            self::VERSION_AE1;
 
         $field = new self($vendorVersion, $keyStrength, $entry->getCompressionMethod());
 
@@ -143,8 +136,10 @@ final class WinZipAesExtraField implements ZipExtraField
      * Returns the Header ID (type) of this Extra Field.
      * The Header ID is an unsigned short integer (two bytes)
      * which must be constant during the life cycle of this object.
+     *
+     * @return int
      */
-    public function getHeaderId(): int
+    public function getHeaderId()
     {
         return self::HEADER_ID;
     }
@@ -152,14 +147,14 @@ final class WinZipAesExtraField implements ZipExtraField
     /**
      * Populate data from this array as if it was in local file data.
      *
-     * @param string    $buffer the buffer to read data from
-     * @param ?ZipEntry $entry
+     * @param string        $buffer the buffer to read data from
+     * @param ZipEntry|null $entry
      *
      * @throws ZipException on error
      *
      * @return WinZipAesExtraField
      */
-    public static function unpackLocalFileData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackLocalFileData($buffer, ZipEntry $entry = null)
     {
         $size = \strlen($buffer);
 
@@ -173,37 +168,36 @@ final class WinZipAesExtraField implements ZipExtraField
             );
         }
 
-        [
-            'vendorVersion' => $vendorVersion,
-            'vendorId' => $vendorId,
-            'keyStrength' => $keyStrength,
-            'compressionMethod' => $compressionMethod,
-        ] = unpack('vvendorVersion/vvendorId/ckeyStrength/vcompressionMethod', $buffer);
+        $data = unpack('vvendorVersion/vvendorId/ckeyStrength/vcompressionMethod', $buffer);
 
-        if ($vendorId !== self::VENDOR_ID) {
+        if ($data['vendorId'] !== self::VENDOR_ID) {
             throw new ZipException(
                 sprintf(
                     'Vendor id invalid: %d. Must be %d',
-                    $vendorId,
+                    $data['vendorId'],
                     self::VENDOR_ID
                 )
             );
         }
 
-        return new self($vendorVersion, $keyStrength, $compressionMethod);
+        return new self(
+            $data['vendorVersion'],
+            $data['keyStrength'],
+            $data['compressionMethod']
+        );
     }
 
     /**
      * Populate data from this array as if it was in central directory data.
      *
-     * @param string    $buffer the buffer to read data from
-     * @param ?ZipEntry $entry
+     * @param string        $buffer the buffer to read data from
+     * @param ZipEntry|null $entry
      *
      * @throws ZipException
      *
      * @return WinZipAesExtraField
      */
-    public static function unpackCentralDirData(string $buffer, ?ZipEntry $entry = null): self
+    public static function unpackCentralDirData($buffer, ZipEntry $entry = null)
     {
         return self::unpackLocalFileData($buffer, $entry);
     }
@@ -214,7 +208,7 @@ final class WinZipAesExtraField implements ZipExtraField
      *
      * @return string the data
      */
-    public function packLocalFileData(): string
+    public function packLocalFileData()
     {
         return pack(
             'vvcv',
@@ -231,7 +225,7 @@ final class WinZipAesExtraField implements ZipExtraField
      *
      * @return string the data
      */
-    public function packCentralDirData(): string
+    public function packCentralDirData()
     {
         return $this->packLocalFileData();
     }
@@ -239,10 +233,12 @@ final class WinZipAesExtraField implements ZipExtraField
     /**
      * Returns the vendor version.
      *
+     * @return int
+     *
      * @see WinZipAesExtraField::VERSION_AE2
      * @see WinZipAesExtraField::VERSION_AE1
      */
-    public function getVendorVersion(): int
+    public function getVendorVersion()
     {
         return $this->vendorVersion;
     }
@@ -255,9 +251,11 @@ final class WinZipAesExtraField implements ZipExtraField
      * @see    WinZipAesExtraField::VERSION_AE2
      * @see    WinZipAesExtraField::VERSION_AE1
      */
-    public function setVendorVersion(int $vendorVersion): void
+    public function setVendorVersion($vendorVersion)
     {
-        if (!\in_array($vendorVersion, self::ALLOW_VENDOR_VERSIONS, true)) {
+        $vendorVersion = (int) $vendorVersion;
+
+        if (!\in_array($vendorVersion, self::$allowVendorVersions, true)) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Unsupport WinZip AES vendor version: %d',
@@ -270,80 +268,113 @@ final class WinZipAesExtraField implements ZipExtraField
 
     /**
      * Returns vendor id.
+     *
+     * @return int
      */
-    public function getVendorId(): int
+    public function getVendorId()
     {
         return self::VENDOR_ID;
     }
 
-    public function getKeyStrength(): int
+    /**
+     * @return int
+     */
+    public function getKeyStrength()
     {
         return $this->keyStrength;
     }
 
     /**
      * Set key strength.
+     *
+     * @param int $keyStrength
      */
-    public function setKeyStrength(int $keyStrength): void
+    public function setKeyStrength($keyStrength)
     {
-        if (!isset(self::ENCRYPTION_STRENGTHS[$keyStrength])) {
+        $keyStrength = (int) $keyStrength;
+
+        if (!isset(self::$encryptionStrengths[$keyStrength])) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Key strength %d not support value. Allow values: %s',
                     $keyStrength,
-                    implode(', ', array_keys(self::ENCRYPTION_STRENGTHS))
+                    implode(', ', array_keys(self::$encryptionStrengths))
                 )
             );
         }
         $this->keyStrength = $keyStrength;
     }
 
-    public function getCompressionMethod(): int
+    /**
+     * @return int
+     */
+    public function getCompressionMethod()
     {
         return $this->compressionMethod;
     }
 
     /**
+     * @param int $compressionMethod
+     *
      * @throws ZipUnsupportMethodException
      */
-    public function setCompressionMethod(int $compressionMethod): void
+    public function setCompressionMethod($compressionMethod)
     {
+        $compressionMethod = (int) $compressionMethod;
         ZipCompressionMethod::checkSupport($compressionMethod);
         $this->compressionMethod = $compressionMethod;
     }
 
-    public function getEncryptionStrength(): int
+    /**
+     * @return int
+     */
+    public function getEncryptionStrength()
     {
-        return self::ENCRYPTION_STRENGTHS[$this->keyStrength];
+        return self::$encryptionStrengths[$this->keyStrength];
     }
 
-    public function getEncryptionMethod(): int
+    /**
+     * @return int
+     */
+    public function getEncryptionMethod()
     {
         $keyStrength = $this->getKeyStrength();
 
-        if (!isset(self::MAP_KEY_STRENGTH_METHODS[$keyStrength])) {
+        if (!isset(self::$MAP_KEY_STRENGTH_METHODS[$keyStrength])) {
             throw new InvalidArgumentException('Invalid encryption method');
         }
 
-        return self::MAP_KEY_STRENGTH_METHODS[$keyStrength];
+        return self::$MAP_KEY_STRENGTH_METHODS[$keyStrength];
     }
 
-    public function isV1(): bool
+    /**
+     * @return bool
+     */
+    public function isV1()
     {
         return $this->vendorVersion === self::VERSION_AE1;
     }
 
-    public function isV2(): bool
+    /**
+     * @return bool
+     */
+    public function isV2()
     {
         return $this->vendorVersion === self::VERSION_AE2;
     }
 
-    public function getSaltSize(): int
+    /**
+     * @return int
+     */
+    public function getSaltSize()
     {
         return (int) ($this->getEncryptionStrength() / 8 / 2);
     }
 
-    public function __toString(): string
+    /**
+     * @return string
+     */
+    public function __toString()
     {
         return sprintf(
             '0x%04x WINZIP AES: VendorVersion=%d KeyStrength=0x%02x CompressionMethod=%s',

@@ -1,44 +1,38 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Constants;
 
 /**
  * Zip Constants.
+ *
+ * @author Ne-Lexa alexey@nelexa.ru
+ * @license MIT
  */
 interface ZipConstants
 {
     /** @var int End Of Central Directory Record signature. */
-    public const END_CD = 0x06054B50; // "PK\005\006"
+    const END_CD = 0x06054B50; // "PK\005\006"
 
     /** @var int Zip64 End Of Central Directory Record. */
-    public const ZIP64_END_CD = 0x06064B50; // "PK\006\006"
+    const ZIP64_END_CD = 0x06064B50; // "PK\006\006"
 
     /** @var int Zip64 End Of Central Directory Locator. */
-    public const ZIP64_END_CD_LOC = 0x07064B50; // "PK\006\007"
+    const ZIP64_END_CD_LOC = 0x07064B50; // "PK\006\007"
 
     /** @var int Central File Header signature. */
-    public const CENTRAL_FILE_HEADER = 0x02014B50; // "PK\001\002"
+    const CENTRAL_FILE_HEADER = 0x02014B50; // "PK\001\002"
 
     /** @var int Local File Header signature. */
-    public const LOCAL_FILE_HEADER = 0x04034B50; // "PK\003\004"
+    const LOCAL_FILE_HEADER = 0x04034B50; // "PK\003\004"
 
     /** @var int Data Descriptor signature. */
-    public const DATA_DESCRIPTOR = 0x08074B50; // "PK\007\008"
+    const DATA_DESCRIPTOR = 0x08074B50; // "PK\007\008"
 
     /**
      * @var int value stored in four-byte size and similar fields
      *          if ZIP64 extensions are used
      */
-    public const ZIP64_MAGIC = 0xFFFFFFFF;
+    const ZIP64_MAGIC = 0xFFFFFFFF;
 
     /**
      * Local File Header signature      4
@@ -53,7 +47,7 @@ interface ZipConstants
      *
      * @var int Local File Header filename position
      */
-    public const LFH_FILENAME_LENGTH_POS = 26;
+    const LFH_FILENAME_LENGTH_POS = 26;
 
     /**
      * The minimum length of the Local File Header record.
@@ -70,13 +64,13 @@ interface ZipConstants
      * file name length                 2
      * extra field length               2
      */
-    public const LFH_FILENAME_POS = 30;
+    const LFH_FILENAME_POS = 30;
 
     /** @var int the length of the Zip64 End Of Central Directory Locator */
-    public const ZIP64_END_CD_LOC_LEN = 20;
+    const ZIP64_END_CD_LOC_LEN = 20;
 
     /** @var int the minimum length of the End Of Central Directory Record */
-    public const END_CD_MIN_LEN = 22;
+    const END_CD_MIN_LEN = 22;
 
     /**
      * The minimum length of the Zip64 End Of Central Directory Record.
@@ -101,5 +95,5 @@ interface ZipConstants
      *
      * @var int ZIP64 End Of Central Directory length
      */
-    public const ZIP64_END_OF_CD_LEN = 56;
+    const ZIP64_END_OF_CD_LEN = 56;
 }

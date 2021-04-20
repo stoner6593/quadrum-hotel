@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * This file is part of the nelexa/zip package.
- * (c) Ne-Lexa <https://github.com/Ne-Lexa/php-zip>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace PhpZip\Util;
 
 use PhpZip\Util\Iterator\IgnoreFilesFilterIterator;
@@ -16,6 +7,9 @@ use PhpZip\Util\Iterator\IgnoreFilesRecursiveFilterIterator;
 
 /**
  * Files util.
+ *
+ * @author Ne-Lexa alexey@nelexa.ru
+ * @license MIT
  *
  * @internal
  */
@@ -25,8 +19,10 @@ final class FilesUtil
      * Is empty directory.
      *
      * @param string $dir Directory
+     *
+     * @return bool
      */
-    public static function isEmptyDir(string $dir): bool
+    public static function isEmptyDir($dir)
     {
         if (!is_readable($dir)) {
             return false;
@@ -40,7 +36,7 @@ final class FilesUtil
      *
      * @param string $dir directory path
      */
-    public static function removeDir(string $dir): void
+    public static function removeDir($dir)
     {
         $files = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
@@ -57,8 +53,12 @@ final class FilesUtil
 
     /**
      * Convert glob pattern to regex pattern.
+     *
+     * @param string $globPattern
+     *
+     * @return string
      */
-    public static function convertGlobToRegEx(string $globPattern): string
+    public static function convertGlobToRegEx($globPattern)
     {
         // Remove beginning and ending * globs because they're useless
         $globPattern = trim($globPattern, '*');
@@ -144,9 +144,13 @@ final class FilesUtil
     /**
      * Search files.
      *
+     * @param string $inputDir
+     * @param bool   $recursive
+     * @param array  $ignoreFiles
+     *
      * @return array Searched file list
      */
-    public static function fileSearchWithIgnore(string $inputDir, bool $recursive = true, array $ignoreFiles = []): array
+    public static function fileSearchWithIgnore($inputDir, $recursive = true, array $ignoreFiles = [])
     {
         if ($recursive) {
             $directoryIterator = new \RecursiveDirectoryIterator($inputDir);
@@ -178,10 +182,16 @@ final class FilesUtil
     /**
      * Search files from glob pattern.
      *
+     * @param string $globPattern
+     * @param int    $flags
+     * @param bool   $recursive
+     *
      * @return array Searched file list
      */
-    public static function globFileSearch(string $globPattern, int $flags = 0, bool $recursive = true): array
+    public static function globFileSearch($globPattern, $flags = 0, $recursive = true)
     {
+        $flags = (int) $flags;
+        $recursive = (bool) $recursive;
         $files = glob($globPattern, $flags);
 
         if (!$recursive) {
@@ -200,9 +210,13 @@ final class FilesUtil
     /**
      * Search files from regex pattern.
      *
+     * @param string $folder
+     * @param string $pattern
+     * @param bool   $recursive
+     *
      * @return array Searched file list
      */
-    public static function regexFileSearch(string $folder, string $pattern, bool $recursive = true): array
+    public static function regexFileSearch($folder, $pattern, $recursive = true)
     {
         if ($recursive) {
             $directoryIterator = new \RecursiveDirectoryIterator($folder);
@@ -229,8 +243,10 @@ final class FilesUtil
      *
      * @param int         $size Size bytes
      * @param string|null $unit Unit support 'GB', 'MB', 'KB'
+     *
+     * @return string
      */
-    public static function humanSize(int $size, ?string $unit = null): string
+    public static function humanSize($size, $unit = null)
     {
         if (($unit === null && $size >= 1 << 30) || $unit === 'GB') {
             return number_format($size / (1 << 30), 2) . 'GB';
@@ -251,14 +267,18 @@ final class FilesUtil
      * Normalizes zip path.
      *
      * @param string $path Zip path
+     *
+     * @return string
      */
-    public static function normalizeZipPath(string $path): string
+    public static function normalizeZipPath($path)
     {
         return implode(
             \DIRECTORY_SEPARATOR,
             array_filter(
-                explode('/', $path),
-                static fn ($part) => $part !== '.' && $part !== '..'
+                explode('/', (string) $path),
+                static function ($part) {
+                    return $part !== '.' && $part !== '..';
+                }
             )
         );
     }
@@ -268,9 +288,11 @@ final class FilesUtil
      *
      * @param string $file A file path
      *
+     * @return bool
+     *
      * @see source symfony filesystem component
      */
-    public static function isAbsolutePath(string $file): bool
+    public static function isAbsolutePath($file)
     {
         return strspn($file, '/\\', 0, 1)
             || (
@@ -281,7 +303,14 @@ final class FilesUtil
             || parse_url($file, \PHP_URL_SCHEME) !== null;
     }
 
-    public static function symlink(string $target, string $path, bool $allowSymlink): bool
+    /**
+     * @param string $target
+     * @param string $path
+     * @param bool   $allowSymlink
+     *
+     * @return bool
+     */
+    public static function symlink($target, $path, $allowSymlink)
     {
         if (\DIRECTORY_SEPARATOR === '\\' || !$allowSymlink) {
             return file_put_contents($path, $target) !== false;
@@ -290,7 +319,12 @@ final class FilesUtil
         return symlink($target, $path);
     }
 
-    public static function isBadCompressionFile(string $file): bool
+    /**
+     * @param string $file
+     *
+     * @return bool
+     */
+    public static function isBadCompressionFile($file)
     {
         $badCompressFileExt = [
             'dic',
@@ -316,7 +350,12 @@ final class FilesUtil
         return self::isBadCompressionMimeType($mimeType);
     }
 
-    public static function isBadCompressionMimeType(string $mimeType): bool
+    /**
+     * @param string $mimeType
+     *
+     * @return bool
+     */
+    public static function isBadCompressionMimeType($mimeType)
     {
         static $badDeflateCompMimeTypes = [
             'application/epub+zip',
@@ -367,13 +406,21 @@ final class FilesUtil
             'x-epoc/x-sisx-app',
         ];
 
-        return \in_array($mimeType, $badDeflateCompMimeTypes, true);
+        if (\in_array($mimeType, $badDeflateCompMimeTypes, true)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
+     * @param string $file
+     *
+     * @return string
+     *
      * @noinspection PhpComposerExtensionStubsInspection
      */
-    public static function getMimeTypeFromFile(string $file): string
+    public static function getMimeTypeFromFile($file)
     {
         if (\function_exists('mime_content_type')) {
             return mime_content_type($file);
@@ -383,10 +430,14 @@ final class FilesUtil
     }
 
     /**
+     * @param string $contents
+     *
+     * @return string
      * @noinspection PhpComposerExtensionStubsInspection
      */
-    public static function getMimeTypeFromString(string $contents): string
+    public static function getMimeTypeFromString($contents)
     {
+        $contents = (string) $contents;
         $finfo = new \finfo(\FILEINFO_MIME);
         $mimeType = $finfo->buffer($contents);
 
