@@ -1,4 +1,8 @@
 <?php
+require __DIR__ . '/../../vendor/autoload.php';
+
+use Carbon\Carbon;
+
 //include "../../config.php";
 date_default_timezone_set('America/Lima');
 //Convertir fecha para MySQL: 01/01/2000 a 2000/01/01
@@ -123,13 +127,16 @@ function estado($xdato){ //Activo / Desativo
 
 function Cfecha($fec)
 {
+	$fecha=Carbon::parse($fec)->format('d-m-Y');
+	echo $fecha;
+	/*echo $fecha;
 	$cua = substr($fec,0,4);
-	
+	///echo $cua;
 	if(preg_match ("//",$cua)){
 		$fecha=substr($fec,8,2)."-".substr($fec,5,2)."-".substr($fec,0,4);
 	}else{
 		$fecha=substr($fec,8,2)."/".substr($fec,5,2)."/".substr($fec,0,4);
-	}
+	}*/
 
 	return $fecha;
 }

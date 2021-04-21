@@ -44,7 +44,7 @@ if($xtxttipoalquiler == 1){
 	$xnrohoras = $precioHorasAlquilerTarifa1;
 	$xfechadesde = date('Y-m-d H:i:s'); //fecha de Hoy
 	$xfechahasta = sumarhoraafecha($xnrohoras,$xfechadesde); //Fecha hasta adicionando 4 horas
-	echo $xfechadesde ;
+	//echo $xfechadesde ;
 	$xtotal = $xcostohoras;
 	
 	$txtcortesiahoras = $_POST['txtcortesiahoras']; //Si es cortesia el Alquiler
@@ -139,9 +139,9 @@ if($xtxttipoalquiler == 2){
 		$dia = date('w', strtotime($fecha));
 		$hora = date('H:i',strtotime($fecha));
 		$horamedia = date('H:i', strtotime($horaMediaConfig));
-		print_r($fecha);
+		//print_r($fecha);
         $fechaAlquiler=date_create($fecha);
-		
+		echo $fecha;
         $sqltarifaespecial = $mysqli->query("SELECT id_tarifa,    descripcion_tarifa,    fecha_tarifa,
         idtipo,    precio_dia,    precio_hora_1,    precio_hora_2,
         precio_hora_adicional,    precio_huesped_adicional,    estado_tarifa
@@ -708,7 +708,7 @@ if($xtxttipoalquiler == 7){
     }
     $mysqli->close();
     $_SESSION['msgerror'] = $Men;
-    header("Location: ../../alquilar.php?idhabitacion=$xtxtidhabitacion&nrohabitacion=$xtxthrohabitacion&idtipohab=$xtipohabitacion&desdeactualizando=si");
+    //header("Location: ../../alquilar.php?idhabitacion=$xtxtidhabitacion&nrohabitacion=$xtxthrohabitacion&idtipohab=$xtipohabitacion&desdeactualizando=si");
     exit;
 
 }

@@ -19,7 +19,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $util = Util::getInstance();
 
-$dato=new Generaxml($_POST['idalquiler'],$_POST['tipo_documento'],$_POST['finicio'],$_POST['ffin']);
+$dato=new Generaxml($_POST['idalquiler'],$_POST['tipo_documento'],@$_POST['finicio'],@$_POST['ffin']);
 
 if($_POST['idalquiler']==0 && $_POST['tipo_documento']==0){
 
@@ -490,7 +490,7 @@ class Generaxml
 
         /** Si solo desea enviar un XML ya generado utilice esta función**/
         //$res = $see->sendXml(get_class($invoice), $invoice->getName(), file_get_contents($ruta_XML));
-
+        
         $res = $see->send($invoice);
 
         //guardar archivo sin firmar
@@ -927,7 +927,7 @@ class Generaxml
         $pdf->SetX(3);
         $pdf->SetFont('Helvetica','B',8);
         $pdf->SetXY(3,45);
-
+        $end_y = $pdf->GetY();
         $pdf->Cell(17, 5, "Cliente:".$end_y,0,0,'L');
         $end_y = $pdf->GetY();
         $pdf->SetFont('Helvetica','',8);
@@ -1016,7 +1016,7 @@ class Generaxml
             $current_x = $pdf->GetX();
 
             $acotado = $row['pro_desc'];
-            $pdf->MultiCell($w[0],4,$acotado,0,‘L’); //$pdf->SetXY(149,$y);
+            $pdf->MultiCell($w[0],4,$acotado,0,'L'); //$pdf->SetXY(149,$y);
 
             $current_x+=$w[0];       //calculate position for next cell
             $pdf->SetXY($current_x, $current_y);    //set position for next cell to print
@@ -1144,7 +1144,7 @@ class Generaxml
         $y=$pdf->GetY();
         $pdf->MultiCell(70,8,"Gracias... vuelva pronto!!!",0,'C',FALSE,1,6,$y+5);
 
-        $pdf->Output('PDF/'.$nombre_archivo.'.pdf', 'F');
+        $pdf->Output(__DIR__.'/PDF/'.$nombre_archivo.'.pdf', 'F');
 
     }
 
