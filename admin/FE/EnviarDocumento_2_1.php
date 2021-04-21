@@ -293,7 +293,7 @@ class Generaxml
 				}
 				
 			}
-    			
+    		
             $pu1=number_format($tmpFila[20] / (1+$IGV_decimal),2);
             $pu= str_replace(",", "", $pu1);
             $t=(str_replace(",", "", $tmpFila[20]));
@@ -302,15 +302,16 @@ class Generaxml
             $igvv=number_format($t - $st,2);
             $igv=str_replace(",", "", $igvv);
             $precioUnitario = number_format($t/1);//Total venta detalle entre cantidad de productos
+          
+            $item = new SaleDetail();            
 
-            $item = new SaleDetail();
             $item->setCodProducto('P00'.$num)
                 ->setUnidad('NIU')
                 ->setDescripcion(str_replace('<br>', '', $descripcion))
                 ->setCantidad(1)
-                ->setMtoValorUnitario(str_replace(",", "", number_format($st,2)))
-                ->setMtoValorVenta(str_replace(",", "", number_format($t,2)))
-                ->setMtoBaseIgv(str_replace(",", "", number_format($stt,2)))
+                ->setMtoValorUnitario(str_replace(",", "", ($st)))
+                ->setMtoValorVenta(str_replace(",", "", ($st)))
+                ->setMtoBaseIgv(str_replace(",", "", ($stt)))
                 ->setPorcentajeIgv($IGV_porcentual)
                 ->setIgv($igv)
                 ->setTipAfeIgv('10')//Gravado - Operación Onerosa
@@ -319,21 +320,21 @@ class Generaxml
                 ->setIsc(0)
                 ->setOtroTributo(0)
             ;
-
+          
 
             $item_pdf ["pro_id"]     = $num;
             $item_pdf ["pro_desc"]   =str_replace('<br>', '', $descripcion) ;
             $item_pdf ['pro_cantidad']   = 1;
             $item_pdf ["pro_unimedida"]  = 'NIU';
-            $item_pdf ["pro_preunitario"]    =str_replace(",", "", number_format($pu,2));
-            $item_pdf ['pro_preref']     =str_replace(",", "", number_format($pu,2));
+            $item_pdf ["pro_preunitario"]    =str_replace(",", "", ($pu));
+            $item_pdf ['pro_preref']     =str_replace(",", "", ($pu));
             $item_pdf ["pro_tipoprecio"]     = "01"; //Precio Incluye IGV
             $item_pdf ["pro_igv"]    = str_replace(',', '', $igv);
             $item_pdf ['pro_tipoimpuesto']   = "10"; //Gravado - Operación Onerosa
-            $item_pdf ["pro_isc"]    = number_format(0.00,2);
-            $item_pdf ["pro_otroimpuesto"]   = number_format(0.00,2);
+            $item_pdf ["pro_isc"]    = (0.00);
+            $item_pdf ["pro_otroimpuesto"]   = (0.00);
             $item_pdf ['pro_subtotal']   =str_replace(',', '', $st);
-            $item_pdf ['pro_total']  = str_replace(",", "", number_format($t,2)); //number_format(str_replace(",", "", $t),2);
+            $item_pdf ['pro_total']  = str_replace(",", "", ($t)); //number_format(str_replace(",", "", $t),2);
 
 
             $globalIGV+=$igv;
@@ -367,24 +368,24 @@ class Generaxml
 
             $descripcion=$vFila[4];
             $cantidad = $vFila['5'];
-            $pu2=number_format($vFila[6] / 1.18,2);
-            $vv2=number_format($vFila[6],2);
+            $pu2=($vFila[6] / 1.18);
+            $vv2=($vFila[6]);
 
             $ttt=($vFila[6] * $vFila[5]);
             $t2=str_replace(",", "",$ttt);
 
-            $st2=str_replace(',', '', number_format($t2 / (1.18 ),2)) ;
-            $igv2=number_format($t2 - $st2,2);
-            $precioUnitario2 = number_format($t2/$cantidad);//Total venta detalle entre cantidad de productos
+            $st2=str_replace(',', '', ($t2 / (1.18 ))) ;
+            $igv2=($t2 - $st2);
+            $precioUnitario2 = ($t2/$cantidad);//Total venta detalle entre cantidad de productos
 
             $item2 = new SaleDetail();
             $item2->setCodProducto('P00'.$num)
                 ->setUnidad('NIU')
                 ->setDescripcion(str_replace('<br>', '', $descripcion))
                 ->setCantidad($cantidad)
-                ->setMtoValorUnitario(str_replace(",", "", number_format($pu2,2)))
-                ->setMtoValorVenta(str_replace(",", "", number_format($vv2,2)))
-                ->setMtoBaseIgv(str_replace(",", "", number_format($st2,2)))
+                ->setMtoValorUnitario(str_replace(",", "", ($pu2)))
+                ->setMtoValorVenta(str_replace(",", "", ($pu2)))
+                ->setMtoBaseIgv(str_replace(",", "", ($st2)))
                 ->setPorcentajeIgv($IGV_porcentual)
                 ->setIgv($igv2)
                 ->setTipAfeIgv('10')//Gravado - Operación Onerosa
@@ -403,13 +404,13 @@ class Generaxml
             $itempdf2 ["pro_tipoprecio"]     = "01"; //Precio Incluye IGV
             $itempdf2 ["pro_igv"]    = $igv2;
             $itempdf2 ['pro_tipoimpuesto']   = "10"; //Gravado - Operación Onerosa
-            $itempdf2 ["pro_isc"]    = number_format(0.00,2);
-            $itempdf2 ["pro_otroimpuesto"]   = number_format(0.00,2);
+            $itempdf2 ["pro_isc"]    = (0.00);
+            $itempdf2 ["pro_otroimpuesto"]   = (0.00);
             $itempdf2 ['pro_subtotal']   =str_replace(",", "", $st2) ;
-            $itempdf2 ['pro_total']  =str_replace(",", "", number_format($t2,2)) ;
+            $itempdf2 ['pro_total']  =str_replace(",", "", ($t2)) ;
 
             $globalIGV+= str_replace(",", "", $igv2);
-            $globalTotalVenta+=str_replace(',', '', number_format($t2,2));
+            $globalTotalVenta+=str_replace(',', '', ($t2));
             $globalGrabadas+= str_replace(",", "", $st2);
 
             if(count($item2)>0){
@@ -442,6 +443,7 @@ class Generaxml
             ->setSerie($correlativo[3])
             ->setCorrelativo(str_pad($correlativo[4], 8, "0", STR_PAD_LEFT))//str_pad($correlativo[4], 8, "0", STR_PAD_LEFT)
             ->setFechaEmision($dateEmi)
+            ->setFormaPago(new FormaPagoContado())
             ->setTipoMoneda('PEN')
             ->setClient($client)
             ->setMtoOperGravadas($globalGrabadas)
@@ -449,6 +451,7 @@ class Generaxml
             ->setMtoIGV($globalIGV)
             ->setTotalImpuestos($globalIGV)
             ->setValorVenta($globalGrabadas)
+            ->setSubTotal($globalTotalVenta)
             ->setMtoImpVenta($globalTotalVenta)
             ->setCompany($company)
             ->setMtoDescuentos($Descuento);

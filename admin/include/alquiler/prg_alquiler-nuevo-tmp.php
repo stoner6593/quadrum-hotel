@@ -91,7 +91,7 @@ if($xtxttipoalquiler == 2){
 	$txtcostodiario = $_POST['txtcostodiario'];
 	$txtfechadesde = $_POST['txtfechadesde'];
 	$txtfechahasta = $_POST['txtfechahasta'];
-	$txtnrodias = $_POST['txtnrodias'];
+	$txtnrodias =isset($_POST['txtnrodias']) ? $_POST['txtnrodias'] : 0;
 	
 	$xfechadesde = Cfecha($txtfechadesde).' '.date('H:i:s'); //fecha de Hoy
 	
@@ -132,7 +132,7 @@ if($xtxttipoalquiler == 2){
 	$fecha = $xfechadesde;
 	$tarifauno = 0;
 	$tarifados = 0;
-	
+	$xtotal =0;
 
 	for ($i = 1; $i <= $txtnrodias; $i++) {
     	
@@ -140,12 +140,12 @@ if($xtxttipoalquiler == 2){
 		$hora = date('H:i',strtotime($fecha));
 		$horamedia = date('H:i', strtotime($horaMediaConfig));
 		//print_r($fecha);
-        $fechaAlquiler=date_create($fecha);
-		echo $fecha;
+        $fechaAlquiler=($fecha);//date_create
+		
         $sqltarifaespecial = $mysqli->query("SELECT id_tarifa,    descripcion_tarifa,    fecha_tarifa,
         idtipo,    precio_dia,    precio_hora_1,    precio_hora_2,
         precio_hora_adicional,    precio_huesped_adicional,    estado_tarifa
-        FROM tarifa_especial where fecha_tarifa = '".$fechaAlquiler->format('Y-m-d')."' and idtipo = $haFila[3] and estado_tarifa = 1 
+        FROM tarifa_especial where fecha_tarifa = '".$fechaAlquiler."' and idtipo = $haFila[3] and estado_tarifa = 1 
         order by fecha_registro desc limit 1");
         $tarifaFila = $sqltarifaespecial->fetch_row();
 
@@ -362,7 +362,7 @@ if($xtxttipoalquiler == 2){
 	
 	
 	
-	$txtcortesiadias = $_POST['txtcortesiadias']; //Si es cortesia el Alquiler
+	$txtcortesiadias = @$_POST['txtcortesiadias']; //Si es cortesia el Alquiler
 	if($txtcortesiadias == 1){
 		$xtotal = 0;
 	}
@@ -385,7 +385,7 @@ if($xtxttipoalquiler == 2){
 		'$xtxttipoalquiler',
 		'$xfechadesde',
 		'$xfechahasta',
-		'$txtnrodias',
+		$txtnrodias,
 		'$txtcostodiario',
 		'$txtcostodiario',
 		'$txtnrodias',
@@ -398,6 +398,7 @@ if($xtxttipoalquiler == 2){
 		}
 		$mysqli->close();	
 		$_SESSION['msgerror'] = $Men;
+		
 		header("Location: ../../alquilar.php?idhabitacion=$xtxtidhabitacion&nrohabitacion=$xtxthrohabitacion&idtipohab=$xtipohabitacion&desdeactualizando=si");
 		exit;
 	
@@ -412,10 +413,12 @@ if($xtxttipoalquiler == 4){
 	$txtprecioadicionalhora = $_POST['txtprecioadicionalhora'];
 	$txtocupantesadicionaleshoras = $_POST['txtocupantesadicionaleshoras'];
 	$xtotal = $txtprecioadicionalhora * $txtocupantesadicionaleshoras;
-	
+	$xfechadesde = date('Y-m-d H:i:s'); //fecha de Hoy
+
 	$consulta="insert into alhab_detalle_tmp(
 		idtmp,
 		tipoalquiler,
+		fechadesde,
 		huespedadicional,
 		costohuespedadicional,
 		preciounitario,
@@ -426,6 +429,7 @@ if($xtxttipoalquiler == 4){
 		
 		'$xidprimario',
 		'$xtxttipoalquiler',
+		'$xfechadesde',
 		'$txtocupantesadicionaleshoras',
 		'$txtprecioadicionalhora',
 		'$txtprecioadicionalhora',
@@ -708,7 +712,7 @@ if($xtxttipoalquiler == 7){
     }
     $mysqli->close();
     $_SESSION['msgerror'] = $Men;
-    //header("Location: ../../alquilar.php?idhabitacion=$xtxtidhabitacion&nrohabitacion=$xtxthrohabitacion&idtipohab=$xtipohabitacion&desdeactualizando=si");
+    header("Location: ../../alquilar.php?idhabitacion=$xtxtidhabitacion&nrohabitacion=$xtxthrohabitacion&idtipohab=$xtipohabitacion&desdeactualizando=si");
     exit;
 
 }

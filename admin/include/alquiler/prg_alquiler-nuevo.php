@@ -162,8 +162,8 @@
 				$xidprimariodetalle = $Contador['0'] + 1 ;
 				
 				$tipoalquiler = $aFila['1'];
-				$fechadesde = $aFila['2'];
-				$fechahasta = $aFila['3'];
+				$fechadesde = isset($aFila['2']) ? $aFila['2'] : date('Y-m-d H:i:s');
+				$fechahasta =  isset($aFila['3']) ? $aFila['3'] : date('Y-m-d H:i:s');
 				$nrohoras = $aFila['4'] == "" ? 0 : $aFila['4'];
 				$nrodias = $aFila['5'] == "" ? 0 : $aFila['5'];
 				$costohora = $aFila['6'] == "" ? 0.00 : $aFila['6'];
@@ -414,7 +414,7 @@
 		
 	$mysqli->close();	
 	$_SESSION['msgerror'] = $Men;
-	//header("Location:../../alquilar-detalle.php?idhabitacion=$xtxtidhabitacion&idalquiler=$xidprimario"); exit; 
+	header("Location:../../alquilar-detalle.php?idhabitacion=$xtxtidhabitacion&idalquiler=$xidprimario"); exit; 
 	echo "<script>location.href = '../../alquilar-detalle.php?idhabitacion=$xtxtidhabitacion&idalquiler=$xidprimario';</script>";
 
 ?>

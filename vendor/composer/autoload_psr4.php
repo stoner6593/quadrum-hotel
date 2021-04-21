@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'mikehaertl\\wkhtmlto\\' => array($vendorDir . '/mikehaertl/phpwkhtmltopdf/src'),
+    'mikehaertl\\tmp\\' => array($vendorDir . '/mikehaertl/php-tmpfile/src'),
+    'mikehaertl\\shellcommand\\' => array($vendorDir . '/mikehaertl/php-shellcommand/src'),
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
@@ -17,7 +20,9 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'PhpZip\\' => array($vendorDir . '/nelexa/zip/src'),
     'Greenter\\XMLSecLibs\\' => array($vendorDir . '/greenter/xmldsig/src'),
-    'Greenter\\' => array($vendorDir . '/greenter/core/src/Core', $vendorDir . '/greenter/lite/src/Greenter', $vendorDir . '/greenter/ws/src', $vendorDir . '/greenter/xml/src'),
+    'Greenter\\' => array($vendorDir . '/greenter/core/src/Core', $vendorDir . '/greenter/data/src', $vendorDir . '/greenter/htmltopdf/src', $vendorDir . '/greenter/lite/src/Greenter', $vendorDir . '/greenter/report/src', $vendorDir . '/greenter/ws/src', $vendorDir . '/greenter/xml/src'),
+    'DASPRiD\\Enum\\' => array($vendorDir . '/dasprid/enum/src'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
+    'BaconQrCode\\' => array($vendorDir . '/bacon/bacon-qr-code/src'),
     '' => array($baseDir . '/src'),
 );

@@ -127,12 +127,17 @@ function estado($xdato){ //Activo / Desativo
 
 function Cfecha($fec)
 {
-	$fecha=Carbon::parse($fec)->format('d-m-Y');
+	$fec =str_replace('/','-',$fec);
+	$fecha=Carbon::parse($fec)->format('Y-m-d');
+	/*echo $fec;
+	//$fecha =Carbon::createFromFormat('d/m/Y', $fec)->format('d-m-Y');     
+
+	
 	echo $fecha;
-	/*echo $fecha;
-	$cua = substr($fec,0,4);
+	echo $fecha;*/
+	//$cua = substr($fec,0,4);
 	///echo $cua;
-	if(preg_match ("//",$cua)){
+	/*if(preg_match ("//",$cua)){
 		$fecha=substr($fec,8,2)."-".substr($fec,5,2)."-".substr($fec,0,4);
 	}else{
 		$fecha=substr($fec,8,2)."/".substr($fec,5,2)."/".substr($fec,0,4);

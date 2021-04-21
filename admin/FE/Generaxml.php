@@ -487,7 +487,7 @@ require_once "../../init.php";
 			
 			
 			//
-			if($xaFila[9]==''){
+			if(isset($xaFila[9])){
 				$RUCReceptor='00000000';
 				$RznSoc= $xaFila[7];
 				$Direccion=$xaFila[8];

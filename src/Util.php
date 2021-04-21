@@ -1,10 +1,18 @@
 <?php
 
-//use Greenter\Data\StoreTrait;
+
+declare(strict_types=1);
+
+use Greenter\Data\DocumentGeneratorInterface;
+use Greenter\Data\GeneratorFactory;
+use Greenter\Data\SharedStore;
 use Greenter\Model\DocumentInterface;
 use Greenter\Model\Response\CdrResponse;
+use Greenter\Model\Sale\SaleDetail;
 use Greenter\Report\HtmlReport;
 use Greenter\Report\PdfReport;
+use Greenter\Report\Resolver\DefaultTemplateResolver;
+use Greenter\Report\XmlUtils;
 use Greenter\See;
 
 final class Util
@@ -15,6 +23,7 @@ final class Util
 
     private function __construct()
     {
+        $this->shared = new SharedStore();
     }
 
     public static function getInstance()
@@ -30,16 +39,38 @@ final class Util
      * @param string $endpoint
      * @return See
      */
-    public function getSee($endpoint)
+    public function getSee(?string $endpoint)
     {
         $see = new See();
         $see->setService($endpoint);
 //        $see->setCodeProvider(new XmlErrorCodeProvider());
-        $see->setCertificate(file_get_contents(__DIR__ . '/../resources/cert.pem'));
-        $see->setCredentials('20000000001MODDATOS', 'moddatos');
+        $certificate = file_get_contents(__DIR__ . '/../resources/cert.pem');
+        if ($certificate === false) {
+            throw new Exception('No se pudo cargar el certificado');
+        }
+        $see->setCertificate($certificate);
+        /**
+         * Clave SOL
+         * Ruc     = 20000000001
+         * Usuario = MODDATOS
+         * Clave   = moddatos
+         */
+        $see->setClaveSOL('20123456789', 'MODDATOS', 'moddatos');
         $see->setCachePath(__DIR__ . '/../cache');
 
         return $see;
+    }
+   
+
+    public function getErrorResponse(\Greenter\Model\Response\Error $error): string
+    {
+        $result = <<<HTML
+        <h2 class="text-danger">Error:</h2><br>
+        <b>Código:</b>{$error->getCode()}<br>
+        <b>Descripción:</b>{$error->getMessage()}<br>
+HTML;
+
+        return $result;
     }
 
     public function getResponseFromCdr(CdrResponse $cdr)

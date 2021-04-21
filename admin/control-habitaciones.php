@@ -73,7 +73,7 @@ $sqlhabitacion = $mysqli->query("select
 				$sqlalquiler = $mysqli->query("select idalquiler, fechafin from al_venta where idalquiler = '$xidalquiler'");
         
 				$aFila = $sqlalquiler->fetch_row();
-     
+          //print_r($aFila);
       
 				//$que = tipoAlquiler($aFila['2']);
 
@@ -129,27 +129,34 @@ $sqlhabitacion = $mysqli->query("select
                         <tr>
                           <td height="25" colspan="2" align="center" valign="top" bgcolor="">
                           
-                          <?php 
-						  	$fechafin = date(($aFila['1'])); //Fecha Hora Fin
-							$fechahoy = date("Y-m-d H:i:s");  //date("2017-08-05 09:57:27"); //Fecha Hora del Sistema
-							$minutos = ceil((strtotime($fechafin) - strtotime($fechahoy)) / 60);
- 							//echo $minutos;
-							
-							//if ($minutos <= 15) {
-							//	 echo 'Menos de 15 minutos de diferencia';
-							//}
+                          <?php
+                          if (isset($aFila)) {
+                           
+                              $fechafin = date(($aFila['1'])); //Fecha Hora Fin
+                              $fechahoy = date("Y-m-d H:i:s");  //date("2017-08-05 09:57:27"); //Fecha Hora del Sistema
+                              $minutos =abs(ceil((strtotime($fechafin) - strtotime($fechahoy)) / 60));
+                            
+                              //echo $minutos;
+                              
+                              //if ($minutos <= 15) {
+                              //	 echo 'Menos de 15 minutos de diferencia';
+                              //}
+                              }
 
-						  ?>
+                            ?>
 
                               <div class="textoContenidoMenor" style="color:#FFFFFF; <?php if($fechafin !="" && $minutos <= 15) { echo "background:#000000;";}?> padding:0px; margin:0px; width:100%; height:100%; text-align:center;">
 
                                   <?php
-                                  $fecha = strtotime(($aFila['1']));
-                                  $fechafin = Cfecha(date("Y-m-d",$fecha));
-                                  $finhora = date("H:i",$fecha);
+                                  if (isset($aFila)) {
+                                    $fecha =  strtotime(($aFila['1']));
+                                  
+                                    $fechafin = Cfecha(date("Y-m-d",$fecha));
+                                    $finhora = date("H:i",$fecha);
 
-                                  if(($aFila['1'])){
-                                      echo 'Fin: '.$fechafin.' - '.$finhora;
+                                    if(($aFila['1'])){
+                                        echo 'Fin: '.$fechafin.' - '.$finhora;
+                                    }
                                   }
                                   ?>
 

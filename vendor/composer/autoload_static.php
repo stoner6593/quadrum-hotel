@@ -14,6 +14,12 @@ class ComposerStaticInitc6a22fa4839c192fc7b12c81e5b5a8ae
     );
 
     public static $prefixLengthsPsr4 = array (
+        'm' => 
+        array (
+            'mikehaertl\\wkhtmlto\\' => 20,
+            'mikehaertl\\tmp\\' => 15,
+            'mikehaertl\\shellcommand\\' => 24,
+        ),
         'T' => 
         array (
             'Twig\\' => 5,
@@ -38,13 +44,33 @@ class ComposerStaticInitc6a22fa4839c192fc7b12c81e5b5a8ae
             'Greenter\\XMLSecLibs\\' => 20,
             'Greenter\\' => 9,
         ),
+        'D' => 
+        array (
+            'DASPRiD\\Enum\\' => 13,
+        ),
         'C' => 
         array (
             'Carbon\\' => 7,
         ),
+        'B' => 
+        array (
+            'BaconQrCode\\' => 12,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'mikehaertl\\wkhtmlto\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikehaertl/phpwkhtmltopdf/src',
+        ),
+        'mikehaertl\\tmp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikehaertl/php-tmpfile/src',
+        ),
+        'mikehaertl\\shellcommand\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikehaertl/php-shellcommand/src',
+        ),
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
@@ -92,13 +118,24 @@ class ComposerStaticInitc6a22fa4839c192fc7b12c81e5b5a8ae
         'Greenter\\' => 
         array (
             0 => __DIR__ . '/..' . '/greenter/core/src/Core',
-            1 => __DIR__ . '/..' . '/greenter/lite/src/Greenter',
-            2 => __DIR__ . '/..' . '/greenter/ws/src',
-            3 => __DIR__ . '/..' . '/greenter/xml/src',
+            1 => __DIR__ . '/..' . '/greenter/data/src',
+            2 => __DIR__ . '/..' . '/greenter/htmltopdf/src',
+            3 => __DIR__ . '/..' . '/greenter/lite/src/Greenter',
+            4 => __DIR__ . '/..' . '/greenter/report/src',
+            5 => __DIR__ . '/..' . '/greenter/ws/src',
+            6 => __DIR__ . '/..' . '/greenter/xml/src',
+        ),
+        'DASPRiD\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dasprid/enum/src',
         ),
         'Carbon\\' => 
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
+        ),
+        'BaconQrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
     );
 
