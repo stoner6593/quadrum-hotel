@@ -609,8 +609,8 @@ $sqlalquilertmp = $mysqli->query("select
 	
 	$("#agregar4").on("click",function(e){
     	e.preventDefault();
-        var f1=$("#datepickertres").val(), f2 =$("#datepickerdos").val();
-    
+        var f1=$("#datepickertres").val().trim(), f2 =$("#datepickerdos").val().trim();
+      
         if(f1 == f2){
           swal({
     			  title: "ADVERTENCIA",

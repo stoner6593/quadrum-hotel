@@ -371,11 +371,11 @@ class Generaxml
             $pu2=($vFila[6] / 1.18);
             $vv2=($vFila[6]);
 
-            $ttt=($vFila[6] * $vFila[5]);
+            $ttt=number_format(($vFila[6] * $vFila[5]),2);
             $t2=str_replace(",", "",$ttt);
 
-            $st2=str_replace(',', '', ($t2 / (1.18 ))) ;
-            $igv2=($t2 - $st2);
+            $st2=number_format(str_replace(',', '', ($t2 / (1.18 ))),2) ;
+            $igv2=number_format(($t2 - $st2),2);
             $precioUnitario2 = ($t2/$cantidad);//Total venta detalle entre cantidad de productos
 
             $item2 = new SaleDetail();
@@ -605,7 +605,7 @@ class Generaxml
                 ->setDireccion( $this->Direccion));
 
 
-        if($xaFila[9]==''){
+        if(isset($xaFila[9])){
             $client = new Client();
             $client->setTipoDoc('6')
                 ->setNumDoc('00000000000')
@@ -743,7 +743,7 @@ class Generaxml
             $globalTotalVenta+=str_replace(',', '', number_format($t2,2));
             $globalGrabadas+= str_replace(",", "", $st2);
 
-            if(count($item2)>0){
+            if(isset($item2)){
 
                 array_push($items,$item2);
                 array_push($itemsPDF,$itempdf2);

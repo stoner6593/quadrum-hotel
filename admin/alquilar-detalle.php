@@ -1147,10 +1147,10 @@ function PendientedePago(){
                                 <a href="control-habitaciones.php" class="btnnegro"> <i class="fa fa-close"></i> Salir </a>
 
                                 </td>
-                                <td><strong <?php if (isset($xaFila[10])=='0' && $cuentaAlquiler==0 && $cuentaProductos==0 ){ echo 'style="display: none"'; }?>>Tipo de Documento:</strong></td>
+                                <td><strong <?php if (isset($xaFila[10]) && $cuentaAlquiler==0 && $cuentaProductos==0 ){ echo 'style="display: none"'; }?>>Tipo de Documento:</strong></td>
                                 <td>
 
-                                	<select name="serie" id="series" class="select" <?php if (isset($xaFila[10])=='0' && $cuentaAlquiler==0 && $cuentaProductos==0 ){ echo 'style="display: none; "'; }?> >
+                                	<select name="serie" id="series" class="select" <?php if (isset($xaFila[10]) && $cuentaAlquiler==0 && $cuentaProductos==0 ){ echo 'style="display: none; "'; }?> >
                                 		<option value=""></option>
                                 		<?php while ($tmpSeries = $serie->fetch_row()){ $num++; ?>
 

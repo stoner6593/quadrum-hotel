@@ -172,8 +172,7 @@ require_once "../../init.php";
 				");
 			$descripcion="";
 			$items=array();
-			$globalIGV=0; $globalTotalVenta=0; $globalGrabadas=0;$Descuento=0; 
-			$num=0;
+			$globalIGV=0; $globalTotalVenta=0; $globalGrabadas=0;$Descuento=0; $num=0;
 			while ($tmpFila = $sqldetalle->fetch_row()){ $num++; 
                 
                 //Validación para que no muestre toda la descripción del alquiler
@@ -457,51 +456,6 @@ require_once "../../init.php";
 			$db = new conexion();
 			$link = $db->conexion();
 
-			$sqlalquiler = $link->query("select
-			al_venta.idalquiler,
-			al_venta.idhuesped,
-			al_venta.idhabitacion,
-			al_venta.nrohabitacion,
-			al_venta.tipooperacion,
-			al_venta.total,
-			
-			cliente.idhuesped,
-			cliente.nombre,
-			cliente.ciudad,
-			cliente.tipo_documento,
-			cliente.documento,
-			
-			al_venta.comentarios,
-			al_venta.nroorden,
-			al_venta.fechafin,
-			al_venta.totalefectivo,
-			al_venta.totalvisa,
-			al_venta.descuento,
-			al_venta.fecharegistro
-			
-			from al_venta inner join cliente on cliente.idhuesped = al_venta.idhuesped
-			where al_venta.idalquiler = '$this->idalquiler' 
-			and al_venta.anulado = 0
-			");		
-			$xaFila = $sqlalquiler->fetch_row();
-			
-			
-			//
-			if(isset($xaFila[9])){
-				$RUCReceptor='00000000';
-				$RznSoc= $xaFila[7];
-				$Direccion=$xaFila[8];
-				$TipoDocumento='1';
-			}else{
-
-				$RUCReceptor=$xaFila[10];
-				$RznSoc= $xaFila[7];
-				$Direccion=$xaFila[8];
-				$TipoDocumento=$xaFila[9];
-
-			}
-
-
 			
 			$array = [
 						'Encabezado' => [
@@ -529,10 +483,10 @@ require_once "../../init.php";
 									'Distrito' 		=> APP_EMISOR_DISTRITO,
 								],
 							'Receptor' => [
-								'RUCReceptor' =>$RUCReceptor,
-								'RznSoc' => $RznSoc,											
-								'Direccion'=> $Direccion,
-								'TipoDocumento'=>$TipoDocumento,
+								'RUCReceptor' =>'00000000',//$RUCReceptor,
+								'RznSoc' => 'Cliente varios',//$RznSoc,											
+								'Direccion'=> '-',//$Direccion,
+								'TipoDocumento'=>'1',//$TipoDocumento,
 							],
 						],
 					];
@@ -668,8 +622,7 @@ require_once "../../init.php";
 					");
 				$descripcion="";
 				$items=array();
-				$globalIGV=0; $globalTotalVenta=0; $globalGrabadas=0; 
-				$num=0;
+				$globalIGV=0; $globalTotalVenta=0; $globalGrabadas=0; $num=0;
 				while ($tmpFila = $sqldetalle->fetch_row()){ $num++; 
 						
 					$pu=number_format($tmpFila[20] / 1.18,2);
@@ -1196,7 +1149,7 @@ require_once "../../init.php";
 	        $pdf->SetCreator(PDF_CREATOR);
 	        $pdf->SetAuthor('José Manuel Bazán de la Cruz');
 	        $pdf->SetTitle($nombre_archivo);
-	        $end_y=0;
+	        
 	       $NomDocumentoImp = '';
 	       switch ($Datos['tipo_documento'])
 		       {
@@ -1251,7 +1204,7 @@ require_once "../../init.php";
 			$pdf->SetX(3);
 			$pdf->SetFont('Helvetica','B',8);			
 			$pdf->SetXY(3,45);
-
+			$end_y = $pdf->GetY();
 			$pdf->Cell(17, 5, "Cliente:".$end_y,0,0,'L');
 			$end_y = $pdf->GetY();
 			$pdf->SetFont('Helvetica','',8);
@@ -1334,7 +1287,6 @@ require_once "../../init.php";
 
 		    foreach($productos as $row)
 		    {
-			
 		    	$pdf->SetX(3);
 		        
 				$current_y = $pdf->GetY(); 
@@ -1469,7 +1421,7 @@ require_once "../../init.php";
 			$y=$pdf->GetY();		
 			$pdf->MultiCell(70,8,"Gracias... vuelva pronto!!!",0,'C',FALSE,1,6,$y+5); 
 		
-	        $pdf->Output(__DIR__ .'/PDF/'.$nombre_archivo.'.pdf', 'F');
+	        $pdf->Output(__DIR__.'/PDF/'.$nombre_archivo.'.pdf', 'F');
 
 		}
 	 
@@ -1480,11 +1432,10 @@ require_once "../../init.php";
 	$dato=new Generaxml($_POST['idalquiler'],$_POST['tipo_documento'],@$_POST['finicio'],@$_POST['ffin']);
 	
 	if($_POST['idalquiler']==0 && $_POST['tipo_documento']==0){
-		
+
 		$dato->_xmlResumen();
 
 	}else{
-	
 		$dato->generar_xml();
 	}
 	
