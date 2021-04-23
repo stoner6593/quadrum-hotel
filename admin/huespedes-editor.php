@@ -138,19 +138,19 @@ $post = array('dni'=>'42058279'); // Array of data with a trigger
                           </tr>
                           <tr>
                             <td height="30"><span class="textoContenido">Documento (*)</span></td>
-                            <td height="30"><input name="txtdocumento" autocomplete="false"  type="text" class="form-control" id="txtdocumento" required value="<?php echo $xhFila['3']?>"> <!--readonly-->
+                            <td height="30"><input name="txtdocumento" autocomplete="false"  type="text" class="form-control" id="txtdocumento" required value="<?php echo @$xhFila['3']?>"> <!--readonly-->
                                <i class="" id="espera"></i>
                             </td>
                           <td><span class="btn btn-success" name="searchCustomer" id="searchCustomer"><i class="fa fa-search" ></i> Buscar</span></td>
                           </tr>
                         <tr>
                           <td width="221" height="30"><span class="textoContenido">Nombre
-                            <input name="txtidprimario" type="hidden" id="txtidprimario" value="<?php echo $xhFila['0']?>">
-                            <input name="txtdesdealquiler" type="hidden" id="txtdesdealquiler" value="<?php echo $xdesdealquiler;?>">
-                            <input name="idhabitacion" type="hidden" id="idhabitacion" value="<?php echo $idhabitacion;?>">
-                            <input name="nrohabitacion" type="hidden" id="nrohabitacion" value="<?php echo $nrohabitacion;?>">
-                          	<input name="xestado" type="hidden" id="xestado" value="<?php echo $xhabestado;?>">
-                          	<input name="idtipohab" type="hidden" id="idtipohab" value="<?php echo $idtipohab;?>">
+                            <input name="txtidprimario" type="hidden" id="txtidprimario" value="<?php echo @$xhFila['0']?>">
+                            <input name="txtdesdealquiler" type="hidden" id="txtdesdealquiler" value="<?php echo @$xdesdealquiler;?>">
+                            <input name="idhabitacion" type="hidden" id="idhabitacion" value="<?php echo @$idhabitacion;?>">
+                            <input name="nrohabitacion" type="hidden" id="nrohabitacion" value="<?php echo @$nrohabitacion;?>">
+                          	<input name="xestado" type="hidden" id="xestado" value="<?php echo @$xhabestado;?>">
+                          	<input name="idtipohab" type="hidden" id="idtipohab" value="<?php echo @$idtipohab;?>">
                           	</span>
                           </td>
                           <td width="221" height="30"><span class="textoContenido">Nacimiento</span></td>
@@ -159,8 +159,8 @@ $post = array('dni'=>'42058279'); // Array of data with a trigger
                           <td width="221" height="30"><span class="textoContenido">Sexo</span></td>
                         </tr>
                         <tr>
-                          <td width="221" height="30"><input name="txtnombre" type="text" class="form-control" id="txtnombre" value="<?php echo $xhFila['1']?>"></td>
-                          <td width="221" height="30"><input name="txtnacimiento" type="text" class="form-control" id="datepicker" placeholder="Ej: 10/05/1981" value="<?php if($xhFila['2']!=""){echo Cfecha($xhFila['2']);}?>"></td>
+                          <td width="221" height="30"><input name="txtnombre" type="text" class="form-control" id="txtnombre" value="<?php echo @$xhFila['1']?>"></td>
+                          <td width="221" height="30"><input name="txtnacimiento" type="text" class="form-control" id="datepicker" placeholder="Ej: 10/05/1981" value="<?php if(isset($xhFila['2'])){echo Cfecha($xhFila['2']);}?>"></td>
 
                           <td width="221" height="30"><?php
                             echo "<select name='txtestadocivil' class='form-control' >";
@@ -176,9 +176,9 @@ $post = array('dni'=>'42058279'); // Array of data with a trigger
                             ?></td>
                             <td width="221" height="30">
                               <select name="selecsexo" id="selecsexo" class='form-control' required>
-																<option value="" <?php echo($xhFila['15'] == "" ? "selected" : ""); ?>></option>
-                                <option value="M" <?php echo($xhFila['15'] == "M" ? "selected" : ""); ?>>M</option>
-                                <option value="F" <?php echo($xhFila['15'] == "F" ? "selected" : ""); ?>>F</option>
+																<option value="" <?php echo @($xhFila['15'] == "" ? "selected" : ""); ?>></option>
+                                <option value="M" <?php echo @($xhFila['15'] == "M" ? "selected" : ""); ?>>M</option>
+                                <option value="F" <?php echo @($xhFila['15'] == "F" ? "selected" : ""); ?>>F</option>
                               </select>
                             </td>
                         </tr>
@@ -189,10 +189,10 @@ $post = array('dni'=>'42058279'); // Array of data with a trigger
                           <td width="221" height="30"><span class="textoContenido">Destino</span></td>
                         </tr>
                         <tr>
-                          <td width="221" height="30"><input name="txtciudad" type="text" class="form-control" id="txtciudad" value="<?php echo $xhFila['5']?>"></td>
-                          <td width="221" height="30"><input name="txtpais" type="text" class="form-control" id="txtpais" value="<?php echo $xhFila['6']?>"></td>
-                          <td width="221" height="30"><input name="txtprocedencia" type="text" class="form-control" id="txtprocedencia" value="<?php echo $xhFila['7']?>"></td>
-                          <td width="221" height="30"><input name="txtdestino" type="text" class="form-control" id="txtdestino" value="<?php echo $xhFila['8']?>"></td>
+                          <td width="221" height="30"><input name="txtciudad" type="text" class="form-control" id="txtciudad" value="<?php echo @$xhFila['5']?>"></td>
+                          <td width="221" height="30"><input name="txtpais" type="text" class="form-control" id="txtpais" value="<?php echo @$xhFila['6']?>"></td>
+                          <td width="221" height="30"><input name="txtprocedencia" type="text" class="form-control" id="txtprocedencia" value="<?php echo @$xhFila['7']?>"></td>
+                          <td width="221" height="30"><input name="txtdestino" type="text" class="form-control" id="txtdestino" value="<?php echo @$xhFila['8']?>"></td>
                         </tr>
                         <?php if($xestado=="modifica"){?>
                         <tr>
@@ -231,8 +231,8 @@ $post = array('dni'=>'42058279'); // Array of data with a trigger
                           <td height="10">&nbsp;</td>
                         </tr>
                          <tr>
-                          <td width="221" height="30"><input name="txtprofesion" type="text" class="form-control" id="txtprofesion" value="<?php echo $xhFila['13']?>"></td>
-                          <td width="221" height="30"><input name="txtocupacion" type="text" class="form-control" id="txtocupacion" value="<?php echo $xhFila['14']?>"></td>
+                          <td width="221" height="30"><input name="txtprofesion" type="text" class="form-control" id="txtprofesion" value="<?php echo @$xhFila['13']?>"></td>
+                          <td width="221" height="30"><input name="txtocupacion" type="text" class="form-control" id="txtocupacion" value="<?php echo @$xhFila['14']?>"></td>
                           <td width="221" height="30">&nbsp;</td>
                           <td width="221" height="30">&nbsp;</td>
                         </tr>
@@ -244,7 +244,7 @@ $post = array('dni'=>'42058279'); // Array of data with a trigger
                           <td height="10">&nbsp;</td>
                         </tr>
                         <tr>
-                          <td height="10" colspan="4"><textarea name="txtcomentarios" class="form-control" id="txtcomentarios" style="width:98%"><?php echo $xhFila['9']?></textarea></td>
+                          <td height="10" colspan="4"><textarea name="txtcomentarios" class="form-control" id="txtcomentarios" style="width:98%"><?php echo @$xhFila['9']?></textarea></td>
                         </tr>
                         <tr>
                           <td height="10">&nbsp;</td>
@@ -291,7 +291,7 @@ $post = array('dni'=>'42058279'); // Array of data with a trigger
 <script type="text/javascript">
   $(function(){
 
-    //$("#tipo_documento").val("<?php echo $xhFila[12];?>").change();
+  
     $("#tipo_documento").on('change',function(e){
       e.preventDefault();
       var valor=$(this).val();
@@ -327,7 +327,9 @@ $post = array('dni'=>'42058279'); // Array of data with a trigger
                         data = eval("("+response+")");
                         
                         console.log(data);
-                        if(typeof data.success != "undefined"){
+                       
+
+                        //if(typeof data.success != "undefined"){
                           if(data.success==true){
                               var vnombre = data.result.NombreCompleto.replace("'", " ");
                               
@@ -354,11 +356,11 @@ $post = array('dni'=>'42058279'); // Array of data with a trigger
                               $("#espera").html('');
                           }else{
                               $("#espera").addClass('text-danger');
-                              $("#espera").html(data.result);
+                              $("#espera").html(data.message);
                               $("#txtnombre").val('');
                               $("#txtciudad").val('');
                           }
-                        }
+                        //}
                         $.ajaxunblock();
                 },
                 errors: function(response){

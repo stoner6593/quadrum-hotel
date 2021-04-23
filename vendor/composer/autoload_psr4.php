@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'response\\' => array($vendorDir . '/jossmp/sunatphp/src'),
     'mikehaertl\\wkhtmlto\\' => array($vendorDir . '/mikehaertl/phpwkhtmltopdf/src'),
     'mikehaertl\\tmp\\' => array($vendorDir . '/mikehaertl/php-tmpfile/src'),
     'mikehaertl\\shellcommand\\' => array($vendorDir . '/mikehaertl/php-shellcommand/src'),
@@ -23,6 +24,7 @@ return array(
     'Greenter\\' => array($vendorDir . '/greenter/core/src/Core', $vendorDir . '/greenter/data/src', $vendorDir . '/greenter/htmltopdf/src', $vendorDir . '/greenter/lite/src/Greenter', $vendorDir . '/greenter/report/src', $vendorDir . '/greenter/ws/src', $vendorDir . '/greenter/xml/src'),
     'DASPRiD\\Enum\\' => array($vendorDir . '/dasprid/enum/src'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
+    'CURL\\' => array($vendorDir . '/jossmp/sunatphp/src'),
     'BaconQrCode\\' => array($vendorDir . '/bacon/bacon-qr-code/src'),
     '' => array($baseDir . '/src'),
 );

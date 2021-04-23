@@ -20,11 +20,11 @@
     },
     "require": {
         "greenter/lite": "^4.3",
-		"jossmp/sunatphp": "^1.7",
         "nesbot/carbon": "^2.46",
         "greenter/report": "^4.3",
         "greenter/htmltopdf": "^4.3",
-        "greenter/data": "^4.3"
+        "greenter/data": "^4.3",
+        "jossmp/sunatphp": "^4.0"
     },
     "scripts": {
         "start": "php -S 0.0.0.0:8080",
