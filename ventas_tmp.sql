@@ -31,3 +31,10 @@ CREATE TABLE `ventas_tmp` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=27345 DEFAULT CHARSET=utf8;
 SET FOREIGN_KEY_CHECKS=1;
+
+
+	
+
+ALTER TABLE ventas_tmp ADD idusuario int(11) DEFAULT NULL;
+ALTER TABLE alhab_detalle_tmp ADD idusuario int(11) DEFAULT NULL;
+ALTER TABLE configuration ADD config_value_5 varchar(100) DEFAULT NULL;
