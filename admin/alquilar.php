@@ -1,4 +1,5 @@
 <?php
+session_start();
 //ini_set('display_errors', 1);
 include "validar.php";
 include "config.php";
@@ -18,6 +19,7 @@ $sqlhuesped = $mysqli->query("select
 	from cliente order by idhuesped asc");
 */
 
+$idusuario = $_SESSION['xyzidusuario'];
 $sqltipohab = $mysqli->query("select idtipo, nombre from hab_tipo where idtipo = '$idtipohab'");
 $tFila = $sqltipohab->fetch_row();
 
@@ -462,9 +464,9 @@ $sqlproducto = $mysqli->query("select
 
 	$desdeactualizando = @$_GET['desdeactualizando'] ;
 	if($desdeactualizando != "si"){
-		$sSQL = "delete from ventas_tmp";
+		$sSQL = "delete from ventas_tmp where idusuario ='$idusuario'";
 		if($mysqli->query($sSQL)){}
-		$sSQL = "delete from alhab_detalle_tmp";
+		$sSQL = "delete from alhab_detalle_tmp where idusuario ='$idusuario' ";
 		if($mysqli->query($sSQL)){}
 		$tmp = "Eliminado";
 	}
@@ -496,6 +498,7 @@ $sqlalquilertmp = $mysqli->query("select
 	tiporeserva
 
 	from alhab_detalle_tmp
+  where idusuario ='$idusuario'
 	order by idtmp asc");
 
 //print_r($sqlalquilertmp->fetch_row());
@@ -899,11 +902,11 @@ $sqlalquilertmp = $mysqli->query("select
                               <tr>
                                 <td width="6%" height="40"><span class="textoContenido">Cliente</span></td>
                                 <td width="53%" height="40">
-                                <input name="txtcliente" type="text" class="textbox" id="txtcliente" style="width:75%;" value="<?php echo $_SESSION['xcliente'];?>" readonly>
+                                <input name="txtcliente" type="text" class="textbox" id="txtcliente" style="width:75%;" value="<?php echo @$_SESSION['xcliente'];?>" readonly>
 
                                   <button type="button" onclick="abrirCliente(); return false" class="btnmodificar tooltip" tooltip="Seleccionar Huésped" style="border:0px; cursor:pointer;"> <i class="fa fa-search-plus"></i></button>
 							       <button type="button" onclick="window.location.href='huespedes-editor.php?xdesdealquiler=1&<?php echo 'idhabitacion='.$xidhabitacion.'&nrohabitacion='.$xnrohabitacion.'&xestado='.$xestadohabitacion.'&idtipohab='.$idtipohab;?>';" class="btnmodificar tooltip" tooltip="Agregar Huésped" style="border:0px; cursor:pointer;"> <i class="fa fa-plus-square"></i></button>
-                                  <input name="txtidcliente" type="hidden" id="txtidcliente" value="<?php echo $_SESSION['xidcliente'];?>"></td>
+                                  <input name="txtidcliente" type="hidden" id="txtidcliente" value="<?php echo @$_SESSION['xidcliente'];?>"></td>
                                   
                                 <td width="26%" height="40" align="center"><span class="textoContenido"><strong><?php echo $tFila['1'];?> N° </strong></span><span class="textoContenido" style="font-size:28px;color:#00A230;"> <?php echo $xnrohabitacion;?></span>
                                   <input name="txtidhabitacion" type="hidden" id="txtidhabitacion" value="<?php echo $xidhabitacion;?>">

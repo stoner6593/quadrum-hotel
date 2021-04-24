@@ -309,7 +309,7 @@ $sqlalquiler = $mysqli->query("select
                 .then((willDelete) => {
                   if (willDelete) {
                                          
-                      window.open("FE/cdr/"+cod);
+                      window.open("FE/CDR/"+cod);
                   }
                 });
                 $( "#div_loading" ).remove();

@@ -149,6 +149,49 @@
                 <?php
             }
 			break;
+
+                        case 'recep2': 
+                        if($_SESSION['estadomenu'] != 0) {
+                ?>
+ <li><a href="index.php"><i class="fa fa-home"></i> &nbsp;&nbsp;&nbsp; Inicio </a></li>
+                <li><a href="control-habitaciones.php"><i class="fa fa-cog"></i> &nbsp;&nbsp;&nbsp; Control</a></li>
+                <li><a href="venta.php"><i class="fa fa-shopping-basket"></i> &nbsp;&nbsp;&nbsp; Venta Productos</a>
+                </li>
+                <li><a href="huespedes.php"><i class="fa fa-users"></i> &nbsp;&nbsp;&nbsp; Huéspedes </a></li>
+
+                <li><a href="habitaciones.php"><i class="fa fa-hotel"></i> &nbsp;&nbsp;&nbsp; Habitaciones </a></li>
+
+                <li><a href="productos.php"><i class="fa fa-qrcode"></i> &nbsp;&nbsp;&nbsp; Productos </a></li>
+                <li><a href="servicios.php"><i class="fa fa-qrcode"></i> &nbsp;&nbsp;&nbsp; Servicios </a></li>
+                <li><a href="compra-gastos.php"><i class="fa fa-qrcode"></i> &nbsp;&nbsp;&nbsp; Compras/Gastos</a></li>
+                <li><a href="reporte.php"><i class="fa fa-line-chart"></i> &nbsp;&nbsp;&nbsp; Reporte </a></li>
+                <li><a href="reportecierreturno.php"><i class="fa fa-line-chart"></i> &nbsp;&nbsp;&nbsp; Reporte Cierre
+                        Turno </a></li>
+                <li><a href="reporteTransacciones.php"><i class="fa fa-line-chart"></i> &nbsp;&nbsp;&nbsp; Reporte Transacciones </a></li>
+                <li><a href="reporteTransaccionesHistorico.php"><i class="fa fa-line-chart"></i> &nbsp;&nbsp;&nbsp; Reporte Transacciones Historico </a></li>
+                <li><a href="usuarios.php"><i class="fa fa-user"></i> &nbsp;&nbsp;&nbsp; Usuarios </a></li>
+<!--            <li><a href="empleado.php"><i class="fa fa-group"></i> &nbsp;&nbsp;&nbsp; Empleados </a></li>   -->
+                <li><a href="listadosunat.php"><i class="fa fa-list-ol"></i> &nbsp;&nbsp;&nbsp;Enviados a SUNAT </a>
+                </li>
+                <li><a href="resumendiario.php"><i class="fa fa-list"></i> &nbsp;&nbsp;&nbsp;Resumen diario </a></li>
+                <li><a href="listadoresumendiario.php"><i class="fa fa-list-ul"></i> &nbsp;&nbsp;&nbsp;Listado resumen diario </a></li>
+                <li><a href="resumendiariohistorico.php"><i class="fa fa-list-alt"></i> &nbsp;&nbsp;&nbsp;Listado de alquileres</a></li>
+                <li><a href="resumencontable.php"><i class="fa fa-list-alt"></i> &nbsp;&nbsp;&nbsp;Resumen Contable</a>
+                </li>
+<!--                <li><a href="librohuespedes.php"><i class="fa fa-book"></i> &nbsp;&nbsp;&nbsp;Libro Huéspedes</a></li>  -->
+                <li><a href="librohuespedesmincetur.php"><i class="fa fa-book"></i> &nbsp;&nbsp;&nbsp;Libro Huéspedes mincetur</a></li>
+                <li><a href="resumenAlquileresAnuladosPrincipal.php"><i class="fa fa-book"></i> &nbsp;&nbsp;&nbsp;Reporte
+                            Alquileres Anulados</a></li>
+                <li><a href="resumenAlquileresAnulados.php"><i class="fa fa-book"></i> &nbsp;&nbsp;&nbsp;Reporte
+                        Alquileres con Detalle Anulado</a></li>
+                <li><a href="reporteMantenimiento.php"><i class="fa fa-book"></i> &nbsp;&nbsp;&nbsp;Reporte de mantenimiento</a></li>
+                <li><a href="reporteCuentasCobrar.php"><i class="fa fa-book"></i> &nbsp;&nbsp;&nbsp;Reporte Cuentas por cobrar</a></li>
+                <li><a href="reporteVentaProducto.php"><i class="fa fa-book"></i> &nbsp;&nbsp;&nbsp;Reporte Venta de producto</a></li>
+                <li><a href="reporteReservas.php"><i class="fa fa-book"></i> &nbsp;&nbsp;&nbsp;Reporte por tipo de reserva</a></li>
+                <li><a href="reporteReservas2.php"><i class="fa fa-book"></i> &nbsp;&nbsp;&nbsp;Reporte de reserva</a></li>
+                <?php
+                        }
+                break;
 			case 'recep':
                 if($_SESSION['estadomenu'] != 0) {
                     ?>

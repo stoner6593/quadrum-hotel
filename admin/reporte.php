@@ -5,6 +5,7 @@ include "include/functions.php";
 date_default_timezone_set('America/Lima');
 
 $xidturno = $_SESSION['idturno'];
+$idusuario = $_SESSION['xyzidusuario'];
 
 $sqlusuarioturno = $mysqli->query("select 
 	idturno,
@@ -12,7 +13,7 @@ $sqlusuarioturno = $mysqli->query("select
 	from ingresosturno where idturno = '$xidturno'");
 	$xuFila = $sqlusuarioturno->fetch_row();
 	
-	$xidusuario = $xuFila["1"]; //Usuario de Turno
+	$xidusuario = @$xuFila["1"]; //Usuario de Turno
 
 //RESUMEN DE PRODUCTOS
 //$xidusuario = $_SESSION['xyzidusuario'];
@@ -41,20 +42,20 @@ $sqlturno = $mysqli->query("select
   totalmastercard,
   totalmastercardanulado
 	
-	from ingresosturno where idturno = '$xidturno'	");
+	from ingresosturno where idturno = '$xidturno' and idusuario ='$idusuario' ");
 
 $hFila = $sqlturno->fetch_row();
 	
 	//Habitacion
-	$xhabitacion = $hFila['1'];
+	$xhabitacion = @$hFila['1'];
 
 	//Producto
-	$xproducto = $hFila['3'];
+	$xproducto = @$hFila['3'];
 	
 	//Visa/Efectivo
-	$xefectivo = $hFila['4'];
-	$xvisa = $hFila['5'];
-  $xmastercard = $hFila['15'];
+	$xefectivo = @$hFila['4'];
+	$xvisa = @$hFila['5'];
+  $xmastercard = @$hFila['15'];
 	
 	//$xsumatotal = $hFila['6'];
 	

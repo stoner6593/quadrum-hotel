@@ -38,6 +38,8 @@ $txttipooperacion = @$_GET['txttipooperacion']; //1. Venta - 2. Cortesia
 $_SESSION['xidcliente'] = $_POST['txtidcliente'];
 $_SESSION['xcliente'] = $_POST['txtcliente'];
 
+
+$idusuario = $_SESSION['xyzidusuario'];
 //1. ALQUILER POR 4 HORAS 35 SOLES *********************************************************************************
 if($xtxttipoalquiler == 1){
 	$xcostohoras = $_POST['txtcostohoras'];
@@ -62,7 +64,8 @@ if($xtxttipoalquiler == 1){
 		costohora,
 		preciounitario,
 		cantidad,
-		total
+		total,
+		idusuario
 		
 		)values(
 		
@@ -74,7 +77,8 @@ if($xtxttipoalquiler == 1){
 		'$xcostohoras',
 		'$xcostohoras',
 		'$xnrohoras',
-		'$xtotal'
+		'$xtotal',
+		'$idusuario'
 		
 		)";
 		if($mysqli->query($consulta)){
@@ -377,7 +381,8 @@ if($xtxttipoalquiler == 2){
 		preciounitario,
 		cantidad,
 		total,
-		comentarios
+		comentarios,
+		idusuario
 		
 		)values(
 		
@@ -390,7 +395,8 @@ if($xtxttipoalquiler == 2){
 		'$txtcostodiario',
 		'$txtnrodias',
 		'$xtotal',
-		'$comentarios'
+		'$comentarios',
+		'$idusuario'
 		
 		)";
 		if($mysqli->query($consulta)){
@@ -423,7 +429,8 @@ if($xtxttipoalquiler == 4){
 		costohuespedadicional,
 		preciounitario,
 		cantidad,
-		total
+		total,
+		idusuario
 		
 		)values(
 		
@@ -434,7 +441,8 @@ if($xtxttipoalquiler == 4){
 		'$txtprecioadicionalhora',
 		'$txtprecioadicionalhora',
 		'$txtocupantesadicionaleshoras',
-		'$xtotal'
+		'$xtotal',
+		'$idusuario'
 		
 		)";
 		if($mysqli->query($consulta)){
@@ -461,7 +469,8 @@ if ($xtxttipoalquiler == 5){
 		costoingresoanticipado,
 		preciounitario,
 		cantidad,
-		total
+		total,
+		idusuario
 		
 		)values(
 		
@@ -470,7 +479,8 @@ if ($xtxttipoalquiler == 5){
 		'$costoingresoanticipado',
 		'$costoingresoanticipado',
 		'$cant',
-		'$xtotal'
+		'$xtotal',
+		'$idusuario'
 		
 		)";
 		if($mysqli->query($consulta)){
@@ -632,7 +642,8 @@ if($xtxttipoalquiler == 6){
 		costohora,
 		preciounitario,
 		cantidad,
-		total
+		total,
+		idusuario
 		
 		
 		)values(
@@ -645,7 +656,8 @@ if($xtxttipoalquiler == 6){
 		'$txtcostodiario',
 		'$txtcostodiario',
 		'$xnrohoras',
-		'$xtotal'
+		'$xtotal',
+		'$idusuario'
 		
 		)";
 		if($mysqli->query($consulta)){
@@ -690,7 +702,8 @@ if($xtxttipoalquiler == 7){
 		cantidad,
 		total,
 		comentarios,
-		tiporeserva
+		tiporeserva,
+		idusuario
 		
 		)values(
 		
@@ -704,7 +717,8 @@ if($xtxttipoalquiler == 7){
 		'$txtnrodias',
 		'$xtotal',
 		'$comentarios',
-		'$cboTipoReserva'
+		'$cboTipoReserva',
+		'$idusuario'
 		
 		)";
     if($mysqli->query($consulta)){

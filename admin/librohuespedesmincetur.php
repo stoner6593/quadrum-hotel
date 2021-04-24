@@ -37,7 +37,7 @@ $newfecha2=$f2[2].'-'.$f2[1].'-'.$f2[0];
 
 <style type="text/css">
   div.dataTables_wrapper {
-        width: 940px;
+        width: 1500px;
         margin: 0 auto;
     }
 </style>
@@ -97,7 +97,7 @@ $newfecha2=$f2[2].'-'.$f2[1].'-'.$f2[0];
                   <td height="30">
 
 
-                    <table id="example" class="display nowrap" style="width:100%">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" id="example" class=" table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>CUARTO N°</th>

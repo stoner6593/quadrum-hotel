@@ -540,7 +540,9 @@ class Generaxml
     function ActualizaVenta($numeracion=array(),$codigoRespuesta,$msgRespuesta,$nombreZip,$nombre_archivo,$corre,$enviado){
         $db = new conexion();
         $link = $db->conexion();
-        return $link->query("UPDATE al_venta SET iddocumento ='$numeracion[0]',correlativo='$numeracion[4]',codigo_respuesta='$codigoRespuesta',
+     
+
+        return $link->query("UPDATE al_venta SET iddocumento ='$numeracion[0]',correlativo='$numeracion[4]',codigo_respuesta='0',
 				mensaje_respuesta='$msgRespuesta',nombrezip='$nombreZip',nombre_archivo='$nombre_archivo',documento='$corre', enviado='$enviado',fechaemision = CURRENT_TIMESTAMP
 			WHERE idalquiler ='$this->idalquiler'");
     }
@@ -549,7 +551,7 @@ class Generaxml
     function ActualizaVentaProductos($numeracion=array(),$codigoRespuesta,$msgRespuesta,$nombreZip,$nombre_archivo,$corre,$enviado){
         $db = new conexion();
         $link = $db->conexion();
-        return $link->query("UPDATE venta SET iddocumento ='$numeracion[0]',correlativo='$numeracion[4]',codigo_respuesta='$codigoRespuesta',
+        return $link->query("UPDATE venta SET iddocumento ='$numeracion[0]',correlativo='$numeracion[4]',codigo_respuesta='0',
 				mensaje_respuesta='$msgRespuesta',nombrezip='$nombreZip',nombre_archivo='$nombre_archivo',documento='$corre', enviado='$enviado'
 			WHERE idventa ='$this->idalquiler'");
     }

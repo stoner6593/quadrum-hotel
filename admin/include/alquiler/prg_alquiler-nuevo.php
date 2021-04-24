@@ -142,13 +142,13 @@
 			tiporeserva,
 			totalmastercard
 			
-			from alhab_detalle_tmp order by idtmp asc ");
+			from alhab_detalle_tmp where idusuario='$idusuario ' order by idtmp asc ");
 
 			$orig = 1;
 
 		$sqltmpC = $mysqli->query("select
 			count(*)			
-			from alhab_detalle_tmp order by idtmp asc ");
+			from alhab_detalle_tmp where idusuario='$idusuario ' order by idtmp asc ");
 		$aFilaC = $sqltmpC->fetch_row();
 
 			$montoEfXDet = $montoefectivo/$aFilaC[0];
@@ -258,7 +258,7 @@
 			}//Fin de While
 			
 			//Eliminando Temporal de Alquiler
-			$sSQL = "delete from alhab_detalle_tmp";
+			$sSQL = "delete from alhab_detalle_tmp where idusuario='$idusuario '";
 			if($mysqli->query($sSQL)){}
 	
 		//Actualizar Estado de Habitacion
@@ -340,7 +340,7 @@
 		if($mysqli->query($consultav) == 1){
 			$Men = "Los datos fueron guardados satisfactoriamente.";
 			//Guardar Detalle Venta
-			$sqltmp = $mysqli->query("select id, idproducto, nombre, cantidad, precio, importe from ventas_tmp order by id asc");
+			$sqltmp = $mysqli->query("select id, idproducto, nombre, cantidad, precio, importe from ventas_tmp where idusuario='$idusuario ' order by id asc");
 			
 			while($tmpFila = $sqltmp->fetch_row()){
 				//Generar ID Venta Detalle
@@ -387,7 +387,7 @@
 				}
 			}		
 			//Eliminando Temporales
-			$sSQL="delete from ventas_tmp";
+			$sSQL="delete from ventas_tmp where idusuario='$idusuario '";
 			if($mysqli->query($sSQL)){}
 		}else{
 			printf("line ".__LINE__." - Errormessage: %s\n", $mysqli->error); exit;

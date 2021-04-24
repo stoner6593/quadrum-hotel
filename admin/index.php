@@ -38,21 +38,24 @@ $sqlconsulta = $mysqli->query("select
 	
 	
 	
-	$xidusuario = $xuFila['3'];
-	$xusuario = $xuFila['4'];
-	$xusuarionombre = $xuFila['5'];
+	$xidusuario = @$xuFila['3'];
+	$xusuario = @$xuFila['4'];
+	$xusuarionombre = @$xuFila['5'];
 	
 	
-	$xidturno = $xuFila['0'];
-	$_SESSION['idturno'] = $xuFila['0'];
+	$xidturno = @$xuFila['0'];
+	$_SESSION['idturno'] = @$xuFila['0'];
 	
 	$abrirturno = 0;
 	
 	if ($numero==1){
 		
 		if($xidusuario <> $xusuarioingresado){
+      //Se cambió para manejar varios usuarios en mismo turno
 			$msg = "Hay un turno abierto con el usuario <br> <strong>".$xusuarionombre." (".$xusuario.")"." </strong> <br> Si requiere cambiar de usuario, antes debe cerrar el turno. <br><br>"."<a href='salir.php' class='btnrojo' style='width:100%; color:#FFFFFF; padding:20px; font-size:18px;'> Salir  </a>";
-			$_SESSION['estadomenu'] = 0;
+			//original $_SESSION['estadomenu'] = 0;
+      $_SESSION['estadomenu'] = 1;
+			$_SESSION['estadoturno'] = 1;
 		}else{
 			$msg = "Hay un turno abierto con el usuario <br> <strong>".$xusuarionombre." (".$xusuario.")"." </strong> <br> Si requiere cambiar de usuario, antes debe cerrar el turno. <br><br>"."<a href='reporte.php?xidturno=$xidturno' class='btnrojo' style='width:100%; color:#FFFFFF; padding:10px; font-size:18px;'> Cerrar Turno  </a>";
 			$_SESSION['estadomenu'] = 1;
