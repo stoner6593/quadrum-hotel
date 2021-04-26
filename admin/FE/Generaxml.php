@@ -851,6 +851,8 @@ require_once "../../init.php";
 		function ActualizaResumenDocumentos($id,$tipoVenta,$codigoRespuesta=""){
 			$db = new conexion();
 			$link = $db->conexion();
+			$link->query("UPDATE venta SET enviado ='2',mensaje_respuesta='Documento enviado por resumen diario',ticket='$codigoRespuesta' WHERE idalquiler ='$id'");
+
 			if($tipoVenta=='1'){
 				return $link->query("UPDATE al_venta SET enviado ='2',mensaje_respuesta='Documento enviado por resumen diario',ticket='$codigoRespuesta' WHERE idalquiler ='$id'");
 			}

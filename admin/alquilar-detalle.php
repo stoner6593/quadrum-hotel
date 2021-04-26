@@ -500,7 +500,7 @@ $sqlventa = $mysqli->query("select
 	ventadetalle.procesado
 
 	from venta left join ventadetalle on ventadetalle.idventa = venta.idventa
-	where venta.idalquiler = '$xidalquiler'	order by ventadetalle.idventadetalle asc");
+	where venta.idalquiler = '$xidalquiler' and ventadetalle.procesado='0'	order by ventadetalle.idventadetalle asc");
 
 
 $sqladicional = $mysqli->query("select

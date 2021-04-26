@@ -22,6 +22,7 @@ $personal = isset($_POST['personal']);
 $xidhabitacion = isset($_GET['idhabitacion']);
 $xidalquiler = isset($_GET['idalquiler']);
 
+$idusuario = $_SESSION['xyzidusuario'];
 
 $xactualiza = isset($_GET['actualiza']);
 
@@ -64,7 +65,7 @@ $sqlservicio = $mysqli->query("select
 		
 		 $ximporte = $xcantidad * $xprecio;
 	   //echo $xcantidad .'-'.$xprecio;
-		$consulta = "insert into ventas_tmp (idproducto,nombre,cantidad,precio,importe) values ('$xidproducto','$xnombre','$xcantidad','$xprecio','$ximporte')";
+		$consulta = "insert into ventas_tmp (idproducto,nombre,cantidad,precio,importe,idusuario) values ('$xidproducto','$xnombre','$xcantidad','$xprecio','$ximporte','$idusuario ')";
 	if($mysqli->query($consulta)){ $tmp = "Ha sido grabado";}else{ $tmp = "No ha sido grabado";};
 		$sqlprecio->free();
 		
@@ -77,7 +78,7 @@ $sqlservicio = $mysqli->query("select
 		$tmp = "Eliminado";
 	}
 
-	$sqltemp = $mysqli->query("select id, idproducto,nombre,cantidad,precio,importe from ventas_tmp order by id asc");
+	$sqltemp = $mysqli->query("select id, idproducto,nombre,cantidad,precio,importe from ventas_tmp where idusuario='$idusuario' order by id asc");
 	
 	
 	
