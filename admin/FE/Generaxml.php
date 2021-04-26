@@ -86,12 +86,13 @@ require_once "../../init.php";
 			from al_venta inner join cliente on cliente.idhuesped = al_venta.idhuesped
 			where al_venta.idalquiler = '$this->idalquiler' 
 			and al_venta.anulado = 0
-			");		
+			");	
+			
 			$xaFila = $sqlalquiler->fetch_row();
 			
-			
+		
 			//
-			if($xaFila[9]==''){
+			if(!isset($xaFila[9])){
 				$RUCReceptor='00000000';
 				$RznSoc= $xaFila[7];
 				$Direccion=$xaFila[8];
@@ -104,6 +105,7 @@ require_once "../../init.php";
 				$TipoDocumento=$xaFila[9];
 
 			}
+			
 
 			$array = [
 							'Encabezado' => [
@@ -138,9 +140,7 @@ require_once "../../init.php";
 								],
 							],
 					];
-
-			
-
+				
 			//Detalle Aquiler
 			$sqldetalle = $link->query("select
 				idalquilerdetalle,
@@ -170,6 +170,7 @@ require_once "../../init.php";
 				from al_venta_detalle 
 				where idalquiler = '$this->idalquiler'   and estadopago!=2 order by idalquilerdetalle asc
 				");
+				
 			$descripcion="";
 			$items=array();
 			$globalIGV=0; $globalTotalVenta=0; $globalGrabadas=0;$Descuento=0; $num=0;
@@ -247,7 +248,7 @@ require_once "../../init.php";
 			ventadetalle.importe
 			
 			from venta left join ventadetalle on ventadetalle.idventa = venta.idventa
-			where venta.idalquiler = '$this->idalquiler' and ventadetalle.procesado='0' order by ventadetalle.idventadetalle asc");
+			where venta.idalquiler = '$this->idalquiler'  order by ventadetalle.idventadetalle asc");
 
 			$detTotventa=0;
 			while($vFila = $sqlventa->fetch_row()){
@@ -283,17 +284,16 @@ require_once "../../init.php";
 	            $globalTotalVenta+=str_replace(',', '', number_format($t2,2));
 	            $globalGrabadas+= str_replace(",", "", $st2);
 	           
-	            if(count($item2)>0){
+	            //if(count($item2)>0){
 
 	            	array_push($items,$item2);
 
 	            	 //Actualiza estado de envío de producto a SUNAT / Esto para cuando se agreguen nuevos productos solo se envíen los NO FACTURADOS
 	            	$sqlDetalleVenta = $link->query("UPDATE ventadetalle SET procesado=1 where idventadetalle='$vFila[2]'");
-	            }
+	            //}
 
 			}
-
-
+		
 
 			//Descuento Global
 			$Descuento= $xaFila[16];
@@ -402,7 +402,7 @@ require_once "../../init.php";
 
 			//Nombre para el archivo PDF ***** mejorar
 			$nombre_archivo = utf8_decode($array['Encabezado']['Emisor']['RUCEmisor'].'-'.$date->format('Y-m-d').'-'.$corre);
-
+			
 			$this->generapdfinvoice($array,$corre,$dato,$items,$MontoLetras,$nombre_archivo,$firmado->firma,$xaFila[3]); //Genera PDF
 			
 			//Agregado para enviar solo facturas, las boletas se almacenan para enviar por resumen diario
@@ -652,7 +652,7 @@ require_once "../../init.php";
 				ventadetalle.importe
 				
 				from venta left join ventadetalle on ventadetalle.idventa = venta.idventa
-				where venta.idalquiler = '$xaFila[0]' and '$xaFila[15]'='1' and ventadetalle.procesado='0' order by ventadetalle.idventadetalle asc");
+				where venta.idalquiler = '$xaFila[0]' and '$xaFila[15]'='1' order by ventadetalle.idventadetalle asc");
 
 				$detTotventa=0;
 				while($vFila = $sqlventa->fetch_row()){
@@ -696,7 +696,7 @@ require_once "../../init.php";
 				ventadetalle.importe
 				
 				from venta left join ventadetalle on ventadetalle.idventa = venta.idventa
-				where venta.idventa = '$xaFila[0]' and '$xaFila[15]'='2'  and ventadetalle.procesado='0' order by ventadetalle.idventadetalle asc");
+				where venta.idventa = '$xaFila[0]' and '$xaFila[15]'='2' order by ventadetalle.idventadetalle asc");
 
 				$detTotventa=0;
 				while($vFila = $sqlventaDetalle->fetch_row()){
@@ -851,8 +851,7 @@ require_once "../../init.php";
 		function ActualizaResumenDocumentos($id,$tipoVenta,$codigoRespuesta=""){
 			$db = new conexion();
 			$link = $db->conexion();
-			$link->query("UPDATE venta SET enviado ='2',mensaje_respuesta='Documento enviado por resumen diario',ticket='$codigoRespuesta' WHERE idalquiler ='$id'");
-
+			
 			if($tipoVenta=='1'){
 				return $link->query("UPDATE al_venta SET enviado ='2',mensaje_respuesta='Documento enviado por resumen diario',ticket='$codigoRespuesta' WHERE idalquiler ='$id'");
 			}

@@ -17,14 +17,14 @@ if(isset($_POST['txtproducto'])){
 }
 
 //$xdato = isset($_POST['txtproducto']) ? $_POST['txtproducto'] : ($_POST['txtservicio']);
-$xmando = isset($_POST['txtmando']);
+$xmando = @($_POST['txtmando']);
 $personal = isset($_POST['personal']);
-$xidhabitacion = isset($_GET['idhabitacion']);
-$xidalquiler = isset($_GET['idalquiler']);
+$xidhabitacion = @($_GET['idhabitacion']);
+$xidalquiler = @($_GET['idalquiler']);
 
 $idusuario = $_SESSION['xyzidusuario'];
 
-$xactualiza = isset($_GET['actualiza']);
+$xactualiza = @($_GET['actualiza']);
 
 $sqlproducto = $mysqli->query("select
 	idproducto,
@@ -55,17 +55,19 @@ $sqlservicio = $mysqli->query("select
 		
 		$xidproducto = isset($pFila['0']) ? $pFila['0'] : 0;
 		$xnombre  = $xdato;
+    echo $condicion.'-'.$personal;
     if($condicion==1 && $personal=='0'){
       $xprecio  = $pFila['1'];
     } else if($condicion==1 && $personal=='1'){
       $xprecio  = $pFila['2'];
     }else{
-      $xprecio  = @$pFila2['1'];
+      $xprecio  = $pFila2['1'];
     }
 		
 		 $ximporte = $xcantidad * $xprecio;
 	   //echo $xcantidad .'-'.$xprecio;
 		$consulta = "insert into ventas_tmp (idproducto,nombre,cantidad,precio,importe,idusuario) values ('$xidproducto','$xnombre','$xcantidad','$xprecio','$ximporte','$idusuario ')";
+  
 	if($mysqli->query($consulta)){ $tmp = "Ha sido grabado";}else{ $tmp = "No ha sido grabado";};
 		$sqlprecio->free();
 		

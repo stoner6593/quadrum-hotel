@@ -761,6 +761,7 @@ function PendientedePago(){
                                       <td width="15%" height="25" align="left" valign="middle" bgcolor="#F4F4F4" ><div align="center">Fecha de Nacimiento</div></td>
                                   </tr>
                                 <?php
+								$suma=1;
                                     while($aFila = $sqladicional->fetch_row())
                                     {
                                         $suma++;
