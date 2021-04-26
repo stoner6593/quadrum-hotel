@@ -175,7 +175,7 @@ class GeneraxmlCB
 
         $now = (new \DateTime())->format('Y-m-d');
 
-        $arrDoc = split ("-", $documento);
+        $arrDoc = explode ("-", $documento);
 
         $correlativoCB = 1;
 
