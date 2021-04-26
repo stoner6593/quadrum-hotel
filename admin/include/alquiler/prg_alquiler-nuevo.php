@@ -12,7 +12,7 @@
 	$TblMax = $mysqli->query("select max(idalquiler) from al_venta");
 	$Contador = $TblMax->fetch_row();
 	$xidprimario = $Contador['0'] + 1 ;
-	echo $xidprimario ;
+
 	//Generar Numero
 	$TblMaxo = $mysqli->query("select max(nroorden) from al_venta");
 	$cont = $TblMaxo->fetch_row();
