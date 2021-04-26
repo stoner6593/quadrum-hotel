@@ -247,7 +247,7 @@ require_once "../../init.php";
 			ventadetalle.importe
 			
 			from venta left join ventadetalle on ventadetalle.idventa = venta.idventa
-			where venta.idalquiler = '$this->idalquiler'  order by ventadetalle.idventadetalle asc");
+			where venta.idalquiler = '$this->idalquiler' and ventadetalle.procesado='0' order by ventadetalle.idventadetalle asc");
 
 			$detTotventa=0;
 			while($vFila = $sqlventa->fetch_row()){
@@ -652,7 +652,7 @@ require_once "../../init.php";
 				ventadetalle.importe
 				
 				from venta left join ventadetalle on ventadetalle.idventa = venta.idventa
-				where venta.idalquiler = '$xaFila[0]' and '$xaFila[15]'='1' order by ventadetalle.idventadetalle asc");
+				where venta.idalquiler = '$xaFila[0]' and '$xaFila[15]'='1' and ventadetalle.procesado='0' order by ventadetalle.idventadetalle asc");
 
 				$detTotventa=0;
 				while($vFila = $sqlventa->fetch_row()){
@@ -696,7 +696,7 @@ require_once "../../init.php";
 				ventadetalle.importe
 				
 				from venta left join ventadetalle on ventadetalle.idventa = venta.idventa
-				where venta.idventa = '$xaFila[0]' and '$xaFila[15]'='2' order by ventadetalle.idventadetalle asc");
+				where venta.idventa = '$xaFila[0]' and '$xaFila[15]'='2'  and ventadetalle.procesado='0' order by ventadetalle.idventadetalle asc");
 
 				$detTotventa=0;
 				while($vFila = $sqlventaDetalle->fetch_row()){
