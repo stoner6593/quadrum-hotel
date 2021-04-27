@@ -931,7 +931,7 @@ class Generaxml
         $pdf->Ln(4);
         $pdf->SetX(3);
         $pdf->SetFont('Helvetica','B',8);
-        $pdf->SetXY(3,45);
+        //$pdf->SetXY(3,45);
         $end_y = $pdf->GetY();
         $pdf->Cell(17, 5, "Cliente:".$end_y,0,0,'L');
         $end_y = $pdf->GetY();
