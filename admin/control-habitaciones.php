@@ -145,7 +145,7 @@ $sqlhabitacion = $mysqli->query("select
 
                             ?>
 
-                              <div class="textoContenidoMenor" style="color:#FFFFFF; <?php if($fechafin !="" && $minutos <= 15 && isset($xhFila)) { echo "background:#000000;";}?> padding:0px; margin:0px; width:100%; height:100%; text-align:center;">
+                              <div class="textoContenidoMenor" style="color:#FFFFFF; <?php if($fechafin !="" && $minutos <= 15 ) { echo "background:#000000;";}?> padding:0px; margin:0px; width:100%; height:100%; text-align:center;">
 
                                   <?php
                                   if (isset($aFila)) {
