@@ -42,7 +42,7 @@ $sqlturno = $mysqli->query("select
   totalmastercard,
   totalmastercardanulado
 	
-	from ingresosturno where idturno = '$xidturno' and idusuario ='$idusuario' ");
+	from ingresosturno where idturno = '$xidturno'  "); //and idusuario ='$idusuario'
 
 $hFila = $sqlturno->fetch_row();
 	
@@ -70,7 +70,7 @@ $sqlgastos = $mysqli->query("select
 	usuario,
 	tipooperacion
 	from gasto 
-	where idturno = '$xidturno' and usuario = '$xidusuario'");
+	where idturno = '$xidturno' "); //and usuario = '$xidusuario'
 	
 	$xcompra = 0;
 	$xgasto = 0;
@@ -89,8 +89,8 @@ function getTotReserva($mysqli, $xidturno, $xidusuario, $tipo){
     SELECT 
       sum(total) as tot
     FROM al_venta_detalle
-    WHERE idturno = '$xidturno' and idusuario = '$xidusuario' and tiporeserva = '$tipo'
-  ");
+    WHERE idturno = '$xidturno'  and tiporeserva = '$tipo'
+  "); //and idusuario = '$xidusuario'
 }
 
 $totCredito   = getTotReserva($mysqli, $xidturno, $xidusuario, 5)->fetch_row();

@@ -1204,9 +1204,9 @@ require_once "../../init.php";
 			$pdf->Ln(4);
 			$pdf->SetX(3);
 			$pdf->SetFont('Helvetica','B',8);			
-			//$pdf->SetXY(3,45);
+			$pdf->SetXY(3,45);
 			$end_y = $pdf->GetY();
-			$pdf->Cell(17, 5, "Cliente:".$end_y,0,0,'L');
+			$pdf->Cell(17, 5, "Cliente: ",0,0,'L'); //.$end_y
 			$end_y = $pdf->GetY();
 			$pdf->SetFont('Helvetica','',8);
 			//$pdf->Cell(17, 48, $arr['Encabezado']['Receptor']['RznSoc'],0,0,'L');
