@@ -1,7 +1,7 @@
 <?php
 
 	global $mysqli;
-	$mysqli = new mysqli("localhost:3306", "root", "stoner93", "quadrum_prueba");
+	$mysqli = new mysqli("localhost:3306", "root", "stoner93", "quadrum2");
 	if ($mysqli->connect_errno) {
 		echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno.") " . $mysqli->connect_error;
 	}
@@ -29,7 +29,7 @@
 
 		private $dbpass = 'stoner93';
 
-		private $dbname = 'quadrum_prueba';
+		private $dbname = 'quadrum2';
 		public function __construct(){}
 
 		public function conexion () {

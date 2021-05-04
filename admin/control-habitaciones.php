@@ -130,13 +130,15 @@ $sqlhabitacion = $mysqli->query("select
                           <td height="25" colspan="2" align="center" valign="top" bgcolor="">
                           
                           <?php
+                          $fechafin ='';
+                          $minutos ='';
                           if (isset($aFila)) {
                            
                               $fechafin = date(($aFila['1'])); //Fecha Hora Fin
                               $fechahoy = date("Y-m-d H:i:s");  //date("2017-08-05 09:57:27"); //Fecha Hora del Sistema
                               $minutos =abs(ceil((strtotime($fechafin) - strtotime($fechahoy)) / 60));
                             
-                              //echo $minutos;
+                             
                               
                               //if ($minutos <= 15) {
                               //	 echo 'Menos de 15 minutos de diferencia';
@@ -145,9 +147,9 @@ $sqlhabitacion = $mysqli->query("select
 
                             ?>
 
-                              <div class="textoContenidoMenor" style="color:#FFFFFF; <?php if($fechafin !="" && $minutos <= 15 ) { echo "background:#000000;";}?> padding:0px; margin:0px; width:100%; height:100%; text-align:center;">
+                              <div class="textoContenidoMenor" style="color:#FFFFFF; <?php if(($fechafin != "")  && $minutos <= 15) { echo "background:#000000;";}?> padding:0px; margin:0px; width:100%; height:100%; text-align:center;">
 
-                                  <?php
+                                  <?php  //echo $fechafin.'-'.$minutos.'oli';
                                   if (isset($aFila)) {
                                     $fecha =  strtotime(($aFila['1']));
                                   
