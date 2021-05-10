@@ -380,20 +380,22 @@ class Generaxml
 
             $item2 = new SaleDetail();
             $item2->setCodProducto('P00'.$num)
-                ->setUnidad('NIU')
-                ->setDescripcion(str_replace('<br>', '', $descripcion))
-                ->setCantidad($cantidad)
-                ->setMtoValorUnitario(str_replace(",", "", ($pu2)))
-                ->setMtoValorVenta(str_replace(",", "", ($pu2)))
-                ->setMtoBaseIgv(str_replace(",", "", ($st2)))
-                ->setPorcentajeIgv($IGV_porcentual)
-                ->setIgv($igv2)
-                ->setTipAfeIgv('10')//Gravado - Operación Onerosa
-                ->setTotalImpuestos($igv2)
-                ->setMtoPrecioUnitario($pu2)
-                ->setIsc(0)
-                ->setOtroTributo(0)
-            ;
+            ->setUnidad('NIU')
+            ->setDescripcion(str_replace('<br>', '', $descripcion))
+            ->setCantidad($cantidad)
+            ->setMtoValorUnitario(str_replace(",", "", ($pu2)))
+            ->setMtoValorVenta(str_replace(",", "", ($st2)))
+            ->setMtoBaseIgv(str_replace(",", "", ($st2)))
+            ->setPorcentajeIgv($IGV_porcentual)
+            ->setIgv($igv2)
+            ->setTipAfeIgv('10')//Gravado - Operación Onerosa
+            ->setTotalImpuestos($igv2)
+            ->setMtoPrecioUnitario($precioUnitario2)
+            ->setIsc(0)
+            ->setOtroTributo(0)
+        ;
+       
+           
 
             $itempdf2 ["pro_id"]     = rand();
             $itempdf2 ["pro_desc"]   =$vFila['4'] ;
