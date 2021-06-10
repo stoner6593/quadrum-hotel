@@ -503,20 +503,32 @@ class Generaxml
 
         //guardar archivo firmado
         $this->util->writeXml($invoice, $see->getFactory()->getLastXml());
-
+      
         if ($res->isSuccess()) {
             /**@var $res \Greenter\Model\Response\BillResult*/
             $cdr = $res->getCdrResponse();
-            $this->util->writeCdr($invoice, $res->getCdrZip());
+            if($cdr->isAccepted()){
 
-            $codigoRespuesta = $cdr->getId();
-            $mensajeSunat = $cdr->getDescription();
-            $nombreZip = ''.$invoice->getName().'.zip';
+                $this->util->writeCdr($invoice, $res->getCdrZip());
+
+                $codigoRespuesta = $cdr->getId();
+                $mensajeSunat = $cdr->getDescription();
+                $nombreZip = ''.$invoice->getName().'.zip';
+
+               
+
+            }else{
+
+                $codigoRespuesta = '-1';
+                $mensajeSunat = 'Pendiente de verificación';
+                $nombreZip = ''.$invoice->getName().'.zip';
+
+            }
 
             $this->generapdfinvoice($array,$corre,$dato,$itemsPDF,$MontoLetras,$nombre_archivo,'',$xaFila[3]); //Genera PDF
             $this->ActualizaCorrelativo($correlativo);
             $this->ActualizaVenta($correlativo,$codigoRespuesta,$mensajeSunat,$nombreZip,$nombre_archivo,$corre,2);
-
+            
             $ArrayMessage=array('success'=> array('ReferenceID' => $corre,'codRespuesta' =>$codigoRespuesta,
                 'Description' => $mensajeSunat,'nombre_archivo'=>$nombre_archivo.'.pdf' ),'errors'=>0);
 

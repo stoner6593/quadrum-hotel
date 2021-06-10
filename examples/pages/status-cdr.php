@@ -17,14 +17,14 @@ $filename = null;
 
 function validateFields(array $items)
 {
-    global $errorMsg;
+    /*global $errorMsg;
     $validateFiels = ['rucSol', 'userSol', 'passSol', 'ruc', 'tipo', 'serie', 'numero'];
     foreach ($items as $key => $value) {
         if (in_array($key, $validateFiels) && empty($value)) {
             $errorMsg = 'El campo '.$key.', es requerido';
             return false;
         }
-    }
+    }*/
 
     return true;
 }
