@@ -552,7 +552,7 @@ if($xtxttipoalquiler == 6){
 			if($i == 1){
 				if($hora > $horamedia){
 					//echo "Tarifa 2 - Viernes";
-					echo $xpreciodiario = $haFila['4'];
+					$xpreciodiario = $haFila['4'];
 				 	$xtotal = $xtotal + $xpreciodiario;
 				}else{
 					//echo "Tarifa 1 :: Domingo - Jueves ";

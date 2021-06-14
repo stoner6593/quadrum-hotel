@@ -507,7 +507,7 @@ class Generaxml
         if ($res->isSuccess()) {
             /**@var $res \Greenter\Model\Response\BillResult*/
             $cdr = $res->getCdrResponse();
-            if($cdr->isAccepted()){
+            if($cdr){
 
                 $this->util->writeCdr($invoice, $res->getCdrZip());
 
